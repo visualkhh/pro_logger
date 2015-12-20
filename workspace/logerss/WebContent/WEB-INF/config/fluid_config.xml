@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fluid xmlns="http://visualkhh.com/fluid">
+	<template id="default">
+		<view id="lang" value="en" />
+		<view id="title" value="loggeress" />
+		<view id="description" value="loging" />
+		<view id="author" value="visualkhh" />
+	</template>
+
+
+	<template id="default-html" value="/WEB-INF/view/default-html.jsp" extends="default">
+		<view id="icon" value="/front-end/bootstrap/3.3.6/docs/favicon.ico" />
+		
+		<view id="default-head-css" value="/WEB-INF/view/front-end/head-css.jsp" />
+		<view id="default-head-javascript" value="/WEB-INF/view/front-end/head-javascript.jsp" />
+		<view id="default-footer-javascript" value="/WEB-INF/view/front-end/footer-javascript.jsp" />
+	</template>
+	
+	<template id="fixtop" extends="default-html">
+		<view id="title" value="loggeress-fixtop" />
+		<view id="page-head-css" value="" />
+		<view id="page-head-javascript" value="" />
+		<view id="page-body" value="/WEB-INF/view/fixtop/fixtop.jsp" />
+		<view id="page-footer-javascript" value="/WEB-INF/view/fixtop/footer-javascript.jsp" />
+	</template>
+	
+</fluid>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<compact>
+
+	<!-- class start-->
+	<class id="connectionCreator" type="class" classpath="loggerss.service.classs.db.ConnectionCreator"></class>      
+	<class id="dbTerminal" type="class" classpath="khh.web.jsp.framework.compact.db.DBTerminalResovler">
+		<constructor>
+			<class ref="connectionCreator"></class>
+		</constructor>
+		<method id="setServletConfig" name="setServletConfig" type="compact-init-method">
+			<class classpath="javax.servlet.ServletConfig" type="compact-injection-parameter"></class>
+		</method>
+		<method id="init" name="init">
+			<class  classpath="java.lang.String" value="/WEB-INF/config/dbterminal_config.xml"></class>
+		</method>
+	</class>      
+	<!-- class end -->
+	
+	<!-- views start-->
+	<class id="FluidViewResovler" classpath="khh.web.jsp.framework.compact.view.FluidViewResovler" type="view">
+		<method id="setServletConfig" name="setServletConfig" type="compact-init-method">
+			<class classpath="javax.servlet.ServletConfig" type="compact-injection-parameter"></class>
+		</method>
+		<method id="init" name="init">
+			<class  classpath="java.lang.String" value="/WEB-INF/config/fluid_config.xml"></class>
+		</method>
+		<method id="gg" name="doRequest" type="compact-service-method">
+			<class classpath="javax.servlet.http.HttpServletRequest" type="compact-injection-parameter"></class>
+			<class classpath="javax.servlet.http.HttpServletResponse" type="compact-injection-parameter"></class>
+		</method>
+	</class>
+	<!-- views end-->
+	
+
+	<!-- services start-->
+	<class id="defaultService"  url=".*(view)\.k" classpath="loggerss.service.ViewForwordService" type="service">
+		<method id="setDB" name="setDB" >
+			<class ref="dbTerminal"></class>
+		</method>
+		<method id="aRequest_doRequest" name="doRequest" type="compact-service-method">
+			<class classpath="javax.servlet.http.HttpServletRequest" type="compact-injection-parameter"></class>
+			<class classpath="javax.servlet.http.HttpServletResponse" type="compact-injection-parameter"></class>
+		</method>
+	</class>
+	<!-- services end-->
+	
+</compact>
