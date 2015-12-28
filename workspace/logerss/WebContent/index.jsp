@@ -1,8 +1,5 @@
-
-<%@page import="java.sql.Connection"%>
-<%@page import="javax.sql.DataSource"%>
-<%@page import="javax.naming.Context"%>
-<%@page import="javax.naming.InitialContext"%>
+<%@page import="khh.web.jsp.framework.filter.validate.Role"%>
+<%@page import="khh.web.jsp.framework.filter.validate.RoleK"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -12,14 +9,13 @@
 <title>Insert title here</title>
 </head>
 <body>
-안녕하세요<%=String.valueOf(4+4+4+22) %>
-
-<%
-
-Context ic = new InitialContext(); 
-DataSource ds = (DataSource) ic.lookup("java:comp/env/jdbc/TestDB"); 
-Connection con = ds.getConnection();
-con.close();
+ㅠㅠㅠ
+<% 
+Role role = (Role)session.getAttribute(RoleK.PARAM_NAME_SESSION);
+if(null!=role){
+	out.println(role.getRoleList());
+	out.println(role.getInfo());
+}
 
 %>
 </body>

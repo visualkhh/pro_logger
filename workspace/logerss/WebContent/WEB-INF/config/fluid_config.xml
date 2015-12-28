@@ -1,20 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <fluid xmlns="http://visualkhh.com/fluid">
 	<template id="default">
-		<view id="lang" value="en" />
-		<view id="title" value="loggeress" />
-		<view id="description" value="loging" />
-		<view id="author" value="visualkhh" />
+		<view id="lang" 		value="en" />
+		<view id="title" 		value="loggeress" />
+
 	</template>
 
-
-	<template id="default-html" value="/WEB-INF/view/default-html.jsp" extends="default">
-		<view id="icon" value="/front-end/bootstrap/3.3.6/docs/favicon.ico" />
-		
-		<view id="default-head-css" value="/WEB-INF/view/front-end/head-css.jsp" />
-		<view id="default-head-javascript" value="/WEB-INF/view/front-end/head-javascript.jsp" />
-		<view id="default-footer-javascript" value="/WEB-INF/view/front-end/footer-javascript.jsp" />
+	<template id="default-html" 				value="/WEB-INF/view/default-html.jsp" extends="default">
+		<view id="icon" 						value="/front-end/logerss/icon/logerss.icon" />
+		<view id="meta-description" 			value="loging" />
+		<view id="meta-author" 					value="visualkhh" />
+		<view id="meta-viewport" 				value="width=device-width, initial-scale=1"/>
+		<view id="default-head-css"				value="/WEB-INF/view/front-end/head-css.jsp" />
+		<view id="default-head-javascript" 		value="/WEB-INF/view/front-end/head-javascript.jsp" />
+		<view id="default-footer-javascript" 	value="/WEB-INF/view/front-end/footer-javascript.jsp" />
 	</template>
+	
+	
+	
+	
+	<template id="/view" extends="default-html">
+<!-- 		<view id="page-head-javascript" value="/WEB-INF/view/front-end/page-head.js" /> -->
+		<view id="page-head-css" 		value="" />
+		<view id="page-body" 			value="/WEB-INF/view/index.jsp" />
+		<view id="page-body-nav" 		value="/WEB-INF/view/include/nav.jsp" />
+		<view id="page-body-footer" 	value="/WEB-INF/view/include/footer.jsp" />
+	</template>
+	
+	<template id="sign" extends="/view">
+		<view id="page-head-css" 	value="/front-end/bootstrap/3.3.6/docs/examples/signin/signin.css" />
+	</template>
+	<template id="/view/signin" extends="sign">
+		<view id="page-body" 		value="/WEB-INF/view/signin.jsp" />
+	</template>
+	<template id="/view/signup" extends="sign">
+		<view id="page-body" 		value="/WEB-INF/view/signup.jsp" />
+	</template>
+	
+	
+	
 	
 	<template id="fixtop" extends="default-html">
 		<view id="title" value="loggeress-fixtop" />

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<validate>
+
+
+
+<!-- 	<class url="/ajax[^/].*" classpath="vvvvvvvvvvv"> -->
+<!-- 	</class> -->
+
+	<class url="/ajax[^/].*" classpath="vvvvvvvvvvv"  type="filter">
+		<rmethod id="doRequest" name="doRequest" type="service-method">
+			<class classpath="javax.servlet.http.HttpServletRequest" type="compact-injection-parameter"/>
+			<class classpath="javax.servlet.http.HttpServletResponse" type="compact-injection-parameter"/>
+		</rmethod>
+	</class>
+	
+	
+	
+<!-- 	<validate-item> -->
+<!-- 		<validate-item> -->
+<!-- 			<validate-item> -->
+<!-- 			</validate-item>		 -->
+<!-- 		</validate-item> -->
+<!-- 	</validate-item> -->
+	
+<!-- 	<validate-item></validate-item> -->
+<!-- 	<validate-item></validate-item> -->
+<!-- 	<validate-item></validate-item> -->
+
+
+	
+</validate>

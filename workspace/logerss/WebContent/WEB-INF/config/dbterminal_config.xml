@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <sqlmap>
-	<select id="test" >
-		SELECT CONCAT(A,'---') A FROM TEST;
-	</select>
-	<select id="cool_select" >
-		select * from gd_bd_notice where hit=#hit#
-		and name=#name# and hit=#hit#;
+	<select id="select_notice" >
+		SELECT * FROM LO_NOTICE
 	</select>
 	
-	<insert id="cool_insert" >
-		insert into insert_test (seq) values (#seq#)
+	<select id="select_user" >
+		SELECT * FROM LO_USER_INFO
+	</select>
+	
+	<select id="select_user_find" >
+		SELECT A.NAME, A.EMAIL, A.PASSWORD, A.ROLE_BASE_SEQ, B.ROLE_SEQ, B.ROLE_NAME 
+		FROM LO_USER_INFO A, ROLE_INFO B WHERE  A.EMAIL = #email# AND A.PASSWORD = #password#
+		AND A.ROLE_BASE_SEQ = B.ROLE_SEQ
+	</select>
+	
+	
+	<insert id="insert_user" >
+		INSERT INTO LO_USER_INFO (NAME,EMAIL,PASSWORD,ROLE_BASE_SEQ)
+		VALUES (#name#,#email#,#password#,'1')
 	</insert>
-	
-	<update id="cool_update" >
-		update insert_test set seq = #seq# 
-	</update>
 	 
 	<delete id="cool_delete" >
-		delete from insert_test where seq=#seq#;
+		delete from insert_test where seq=#seq#
 	</delete>
 	
 	

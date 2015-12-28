@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<compact>
+<!-- 
+<method ..type="compact-init-method">
+			<class classpath="javax.servlet.ServletConfig" type="compact-injection-parameter"/>
+</method>
+type="compact-init-method"  을하면 init 서블릿 메서드 탈때  injection을해준다.
+type="compact-service-method"  을하면 service 서블릿 메서드 탈때  injection을해준다.
+ -->
+	<!-- class start-->
+	<class id="connectionCreator" classpath="loggerss.service.classs.db.ConnectionCreator"/>      
+	<class id="dbTerminal" classpath="khh.web.jsp.framework.compact.db.DBTerminalResovler">
+		<constructor>
+			<class extends="connectionCreator"/>
+		</constructor>
+		<method id="setServletConfig" name="setServletConfig" type="init-method">
+			<class classpath="javax.servlet.ServletConfig" type="bind-parameter"/>
+		</method>
+		<method id="init" name="init">
+			<class classpath="java.lang.String" value="/WEB-INF/config/dbterminal_config.xml"/>
+		</method>
+	</class>
+	
+		<!-- execute services -->
+<!-- 		<class id="session_service" classpath="loggerss.service.Session"> -->
+<!-- 			<constructor><class extends="dbTerminal"/></constructor> -->
+<!-- 		</class> -->
+		<class id="info_service" classpath="loggerss.service.Info">
+			<constructor><class extends="dbTerminal"/></constructor>
+		</class>
+		<class id="sign_service" classpath="loggerss.service.Sign">
+			<constructor><class extends="dbTerminal"/></constructor>
+		</class>
+		<!-- execute services -->
+	
+	<!-- class end -->
+	
+	<!-- views start-->
+	<class id="defaultView" classpath="khh.web.jsp.framework.compact.view.ForWardViewResovler" type="view" order="default">
+		<method id="setViewPath" name="setViewPath">
+			<class  classpath="java.lang.String" value="/WEB-INF/view/format/xml.jsp"/>
+		</method>
+		<rmethod id="doRequest" name="doRequest" type="service-method">
+			<class classpath="javax.servlet.http.HttpServletRequest" type="bind-parameter"/>
+			<class classpath="javax.servlet.http.HttpServletResponse" type="bind-parameter"/>
+		</rmethod>
+	</class>
+	<!-- views end-->
+	
+	
+
+	<!--services start-->
+	<class id="infoController"  url="/ajax.*" classpath="khh.web.jsp.framework.compact.controller.URIDivisionService" type="service">
+<!-- 		<method id="info" name="addObject"> -->
+<!-- 			<class classpath="java.lang.String" value="session"/> -->
+<!-- 			<class extends="session_service"/> -->
+<!-- 		</method> -->
+		<method id="info" name="addObject">
+			<class classpath="java.lang.String" value="/ajax/info"/>
+			<class extends="info_service"/>
+		</method>
+		<method id="sign" name="addObject">
+			<class classpath="java.lang.String" value="/ajax/sign"/>
+			<class extends="sign_service"/>
+		</method>
+		<rmethod id="doRequest" name="doRequest" type="service-method">
+			<class classpath="javax.servlet.http.HttpServletRequest" type="bind-parameter"/>
+			<class classpath="javax.servlet.http.HttpServletResponse" type="bind-parameter"/>
+		</rmethod>
+	</class>
+	<!-- services end-->
+	
+</compact>

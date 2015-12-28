@@ -39,8 +39,9 @@
 	<target id="super_target">
 		<loger>
 			<level>A</level>
-			<dateformat>HH:mm:s,SSS</dateformat>
-			<logformat>%d [%l] %k(%f)(line %n)  >>  %m   %e%r</logformat>
+			<!--<dateformat>HH:mm:s,SSS</dateformat>-->
+			<dateformat>SSS</dateformat>
+			<logformat>%d[%l]%k(%f)(%n)>>  %m   %e%r</logformat>
 			<exception_stacktrace>true</exception_stacktrace>
 			<outputstream></outputstream>
 		</loger>
