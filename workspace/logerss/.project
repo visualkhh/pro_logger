@@ -50,11 +50,6 @@
 			<locationURI>PARENT-7-PROJECT_LOC/git/jsputil-visualkhh/Fluid/WebContent/WEB-INF/jsp</locationURI>
 		</link>
 		<link>
-			<name>WebContent/WEB-INF/tld</name>
-			<type>2</type>
-			<locationURI>PARENT-7-PROJECT_LOC/git/jsputil-visualkhh/Fluid/WebContent/WEB-INF/tld</locationURI>
-		</link>
-		<link>
 			<name>WebContent/front-end/bootstrap</name>
 			<type>2</type>
 			<locationURI>PARENT-7-PROJECT_LOC/git/frontend-visualkhh/WebContent/bootstrap</locationURI>
@@ -68,6 +63,36 @@
 			<name>WebContent/front-end/jquery</name>
 			<type>2</type>
 			<locationURI>PARENT-7-PROJECT_LOC/git/frontend-visualkhh/WebContent/jquery</locationURI>
+		</link>
+		<link>
+			<name>WebContent/WEB-INF/tld/Fluid.tld</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/git/jsputil-visualkhh/Fluid/WebContent/WEB-INF/tld/Fluid.tld</locationURI>
+		</link>
+		<link>
+			<name>WebContent/WEB-INF/tld/RoleK.tld</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/git/jsputil-visualkhh/webJSPUtil/WebContent/WEB-INF/tld/RoleK.tld</locationURI>
+		</link>
+		<link>
+			<name>WebContent/front-end/graphk/graphk.html</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/git/graphK/graphk.html</locationURI>
+		</link>
+		<link>
+			<name>WebContent/front-end/graphk/graphk.js</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/git/graphK/graphk.js</locationURI>
+		</link>
+		<link>
+			<name>WebContent/front-end/graphk/graphk_object.js</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/git/graphK/graphk_object.js</locationURI>
+		</link>
+		<link>
+			<name>WebContent/front-end/graphk/graphk_util.js</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/git/graphK/graphk_util.js</locationURI>
 		</link>
 	</linkedResources>
 	<variableList>

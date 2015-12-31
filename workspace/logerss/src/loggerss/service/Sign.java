@@ -1,5 +1,7 @@
 package loggerss.service;
 
+import java.util.LinkedHashMap;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -10,8 +12,8 @@ import khh.db.util.DBUtil;
 import khh.debug.LogK;
 import khh.std.adapter.AdapterMap;
 import khh.web.jsp.framework.compact.db.DBTerminalResovler;
-import khh.web.jsp.framework.filter.validate.Role;
-import khh.web.jsp.framework.filter.validate.RoleK;
+import khh.web.jsp.framework.validate.rolek.Role;
+import khh.web.jsp.framework.validate.rolek.RoleK;
 import loggerss.INFO;
 
 public class Sign {
@@ -20,9 +22,18 @@ public class Sign {
 	public Sign(DBTerminalResovler dbResovler) {
 		this.dbResovler=dbResovler;
 	}
+	public void out(HttpServletRequest request, HttpServletResponse response){
+		log.debug("signout "+request+"    "+response);
+		try {
+			request.getSession().invalidate();
+			request.setAttribute("STATUS_CODE", INFO.STATUS_CODE_SUCCESS);
+			log.debug("logout!!");
+		} catch (Exception e) {
+			request.setAttribute("STATUS_CODE", INFO.STATUS_CODE_FAIL);
+			request.setAttribute("STATUS_MSG", e.getMessage());
+		}
+	}
 	public void up(HttpServletRequest request, HttpServletResponse response){
-		
-		
 		log.debug("signup "+request+"    "+response);
 		DBTerminal db = dbResovler.getDBTerminal();
 		try {
@@ -53,18 +64,21 @@ public class Sign {
 			DBTResultSetContainer dc = db.executeMapQuery("select_user_find",param);
 			for (int i = 0; i < dc.size(); i++) {
 	    		 DBTResultRecord row = dc.get(i);
-	    		 role.putInfo("USER_NAME", 			row.getString("NAME"));
-	    		 role.putInfo("USER_EMAIL", 		row.getString("EMAIL"));
-	    		 role.putInfo("USER_PASSWORD", 		row.getString("PASSWORD"));
-	    		 role.putInfo("USER_ROLE_BASE_SEQ", row.getString("ROLE_BASE_SEQ"));
-	    		 role.putInfo("USER_ROLE_SEQ", 		row.getString("ROLE_SEQ"));
-	    		 role.putInfo("USER_ROLE_NAME", 	row.getString("ROLE_NAME"));
+	    		 role.putSession("USER_NAME", 			row.getString("NAME"));
+	    		 role.putSession("USER_EMAIL", 		row.getString("EMAIL"));
+	    		 role.putSession("USER_PASSWORD", 		row.getString("PASSWORD"));
+	    		 role.putSession("USER_ROLE_BASE_SEQ", row.getString("ROLE_BASE_SEQ"));
+	    		 role.putSession("USER_ROLE_SEQ", 		row.getString("ROLE_SEQ"));
+	    		 role.putSession("USER_ROLE_NAME", 	row.getString("ROLE_NAME"));
 	    		 //row.getString("USER_NAME",row.get)
 	    		// for (int j = 0; j < row.size(); j++) {
 	    			 //role.putInfo("USER_ROLE", value);
 	    		// }
 			}
 			if(dc.size()>0){
+				LinkedHashMap<String, LinkedHashMap<String, String>> baseRole = RoleK.getBaseRole(role.getSession("USER_ROLE_NAME"));
+				/*여기에 고객role로  덮어버릴건 버리고..baseRole...*/
+				role.setRoleList(baseRole);
 				request.setAttribute("STATUS_CODE", INFO.STATUS_CODE_SUCCESS);
 			}else{
 				request.setAttribute("STATUS_CODE", INFO.STATUS_CODE_FAIL);
@@ -77,11 +91,5 @@ public class Sign {
 			request.setAttribute("STATUS_MSG", e.getMessage());
 		}
 	}
-//	public void doRequest(HttpServletRequest request, HttpServletResponse response){
-//		log.debug("sign doRequest "+request+"    "+response);
-//	}
-//	public void sign(){
-//		log.debug("sign");
-//	}
 	
 }

@@ -51,7 +51,7 @@
 	
 	<filter>
 		<filter-name>RoleK</filter-name>
-		<filter-class>khh.web.jsp.framework.filter.validate.RoleK</filter-class>
+		<filter-class>khh.web.jsp.framework.validate.rolek.RoleK</filter-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>/WEB-INF/config/rolek_config.xml</param-value>

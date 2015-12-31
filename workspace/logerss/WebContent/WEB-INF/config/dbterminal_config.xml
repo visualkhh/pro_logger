@@ -10,7 +10,7 @@
 	
 	<select id="select_user_find" >
 		SELECT A.NAME, A.EMAIL, A.PASSWORD, A.ROLE_BASE_SEQ, B.ROLE_SEQ, B.ROLE_NAME 
-		FROM LO_USER_INFO A, ROLE_INFO B WHERE  A.EMAIL = #email# AND A.PASSWORD = #password#
+		FROM LO_USER_INFO A, LO_ROLE_INFO B WHERE  A.EMAIL = #email# AND A.PASSWORD = #password#
 		AND A.ROLE_BASE_SEQ = B.ROLE_SEQ
 	</select>
 	

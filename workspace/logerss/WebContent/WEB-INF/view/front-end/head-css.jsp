@@ -5,6 +5,7 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <link href="/front-end/bootstrap/3.3.6/docs/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 
+<!-- <link rel="stylesheet" href="/front-end/bootstrapcdn/css/font-awesome.min.css"> -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <style type="text/css">
 body{margin-top:20px;}

@@ -1,63 +1,17 @@
 <%@taglib prefix="fluid"  uri="http://visualkhh.com/fluid"%>
 <%@taglib prefix="rolek"  uri="http://visualkhh.com/rolek"%>
-<rolek:insertString id="IS_LOGIN" equals="true">
-	<script type="text/javascript">
-	EventUtil.addOnloadEventListener(function(){
-		$("#signout").click(function(){
-			var param = {
-					"url":"/ajax/sign",
-					"type":"POST",
-					"data" : 	{
-								"MN":"out"
-								},
-					onSuccess : ajaxNavCallBack,
-					dataType:"XML"
-				};
-			ajax(param,"Sign out request..")
-		});
-	 
-	});
-	
-	function ajaxNavCallBack(data,readyState,status){
-		var status_code = $(data).find("ROOT>STATUS_CODE").text();
-		var status_msg = $(data).find("ROOT>STATUS_MSG").text();
-		if(STATUS_CODE_SUCCESS==status_code){ //성공
-			alert("Sign out success");
-			setTimeout(LocationUtil.goHref("/view"), "1500")
-		}else{	//실패
-			alert(status_msg+"("+status_code+")");
-		}
-	}
-	</script>
-</rolek:insertString>
-
-
     <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
       
-        <div class="navbar-header row">
+        <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <span class="navbar-brand" style="">
-          <a href="/view" style="color:rgb(255,162,6);"><img src="<fluid:insertString id="icon"/>" style="float: left;"/>logerss</a>
-          <rolek:insertString id="IS_LOGIN" equals="true">
-          <a style="font-size: 14px; color:#777;  margin-left: 50px; " href="/view/mylog" >MyLog <span class="fa fa-bar-chart"></span></a>
-          <a style="font-size: 14px; color:#777;  margin-left: 30px; " href="/view/mylog/new" >NewLog <span class="fa fa-plus"></span></a>
-          </rolek:insertString>
-          </span>
-<%--           <a class="navbar-brand" href="/view" style="color:rgb(255,162,6);"><img src="<fluid:insertString id="icon"/>" style="float: left;"/>logerss</a> --%>
-          
-
+          <a class="navbar-brand" href="/view"><img src="<fluid:insertString id="icon"/>" style="float: left;"/>logerss</a>
         </div>
-
-<%--          <rolek:insertString id="IS_LOGIN" equals="true"> --%>
-<!-- 	          <li><a href="/view/mylog" >MyLog <span class="fa fa-bar-chart"></span></a></li> -->
-<%--          </rolek:insertString> --%>
-
         <div id="navbar" class="navbar-collapse collapse">
 <!--           <ul class="nav navbar-nav"> -->
 <!--             <li class="active"><a href="#">Home</a></li> -->
@@ -72,11 +26,12 @@
           </li>
 <%--           ${ROLEK.info} --%>
           	<rolek:insertString id="IS_LOGIN" equals="false">
-            <li><a href="/view/signup"><span class="fa fa-registered" aria-hidden="true"></span> Sign up</a> </li>
-            <li><a href="/view/signin"><span class="fa fa-sign-in" aria-hidden="true"></span> Sign in</a> </li>
+            <li><a href="/view/signup">Sign up</a></li>
+            <li><a href="/view/signin">Sign in</a></li>
             </rolek:insertString>
           	<rolek:insertString id="IS_LOGIN" equals="true">
-            <li><a href="#" id="signout"><span class="fa fa-sign-out" aria-hidden="true"></span>Sign out</a> </li>
+            <li>${ROLEK.session.USER_NAME}</li>
+            <li><a href="/view/signin">Sign out</a></li>
             </rolek:insertString>
 <!--             <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li> -->
             

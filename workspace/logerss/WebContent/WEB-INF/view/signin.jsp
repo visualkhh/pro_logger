@@ -12,22 +12,23 @@ EventUtil.addOnloadEventListener(function(){
 							"password":$("#password").val(),
 							"MN":"in"
 							},
-				onSuccess : ajaxCallBack,
+				onSuccess : ajaxSignInCallBack,
 				dataType:"XML"
 			};
-		ajax(param,"request regist..")
+		ajax(param,"Sign In request..")
 	});
  
 });
 
 
-function ajaxCallBack(data,readyState,status){
+function ajaxSignInCallBack(data,readyState,status){
 	var status_code = $(data).find("ROOT>STATUS_CODE").text();
 	var status_msg = $(data).find("ROOT>STATUS_MSG").text();
 	
 	if(STATUS_CODE_SUCCESS==status_code){ //성공
 		$("#success-signin-container").show();
 		$("#error-signin-container").hide();
+		setTimeout(LocationUtil.goHref("/view"), "1500")
 	}else{	//실패
 		$("#success-signin-container").hide();
 		$("#error-signin-container").show();
@@ -68,8 +69,8 @@ function ajaxCallBack(data,readyState,status){
 									  <span id="success-signup-msg-container">success</span>
 									  <span>
 									  <div style="text-align: center;"> 
-									  	<a type="button"  href="/view/signin" class="btn btn-default btn-lg">
-  										<span class="" aria-hidden="true"></span> Go Sign In
+									  	<a type="button"  href="/view" class="btn btn-default btn-lg">
+  										<span class="" aria-hidden="true"></span> Go Main
 										</a>
 										</div>
 									  </span>

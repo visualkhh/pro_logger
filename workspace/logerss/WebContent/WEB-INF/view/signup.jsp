@@ -24,14 +24,14 @@ function registerAjax(){
 						"password_confirmation":$("#password_confirmation").val(),
 						"MN":"up"
 						},
-			onSuccess : ajaxCallBack,
+			onSuccess : ajaxSignUpCallBack,
 			dataType:"XML"
 		};
 	ajax(param,"request regist..")
 	
 }
 
-function ajaxCallBack(data,readyState,status){
+function ajaxSignUpCallBack(data,readyState,status){
 	var status_code = $(data).find("ROOT>STATUS_CODE").text();
 	var status_msg = $(data).find("ROOT>STATUS_MSG").text();
 	

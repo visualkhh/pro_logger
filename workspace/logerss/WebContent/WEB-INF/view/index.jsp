@@ -1,3 +1,5 @@
+<%@page import="khh.web.jsp.framework.validate.rolek.RoleK"%>
+<%@page import="khh.web.jsp.framework.validate.rolek.Role"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="khh.property.util.PropertyUtil"%>
 <%@taglib prefix="fluid"  uri="http://visualkhh.com/fluid"%>
@@ -19,15 +21,15 @@ EventUtil.addOnloadEventListener(function(){
 	//$('#task-container').modal('show');
 });
 function ajaxCallBack(data,readyState,status){
-// 	var selector = new SelectorK("status_msg", data);
-	if(STATUS_CODE_SUCCESS==$(data).find("ROOT>STATUS_CODE").text()){ //성공
+	var status_code = $(data).find("ROOT>STATUS_CODE").text();
+	var status_msg = $(data).find("ROOT>STATUS_MSG").text();
+	if(STATUS_CODE_SUCCESS==status_code){ //성공
 		$(data).find("ROOT>RESULT>TABLE>RECODE").each(function(index){
 			var title = $(this).find("TITLE").text();
 			$("#notice_container").append("<div>"+title+"</div>");
-			//console.log( new SelectorK("TITLE",this).get(0).textContent )
 		});
 	}else{	//실패
-		alert("notice loading FAIL!");
+		alert("notice loading FAIL!</br>"+status_msg);
 	}
 
 }
@@ -78,8 +80,8 @@ function ajaxCallBack(data,readyState,status){
             </ul>
         </div>
       </div>
-      
-      
+${ROLEK.pageRole}  <br>
+${ROLEK.session}
 	<!-- page END -->
 	<fluid:insertView id="page-body-footer"/>
     </div> <!-- /container -->

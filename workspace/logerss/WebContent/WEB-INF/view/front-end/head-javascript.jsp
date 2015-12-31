@@ -11,6 +11,9 @@
 	<script src="/front-end/bootstrap/3.3.6/docs/assets/js/vendor/jquery.min.js"></script>
 	<script src="/front-end/javascript/visualkhh/sizzle.js"></script>
 	<script src="/front-end/javascript/visualkhh/util.js"></script>
+	<script src="/front-end/graphk/graphk_util.js"></script>
+	<script src="/front-end/graphk/graphk_object.js"></script>
+	<script src="/front-end/graphk/graphk.js"></script>
 	<script type="text/javascript">
 	var STATUS_CODE_SUCCESS				= "<%=INFO.STATUS_CODE_SUCCESS			%>"; //성공 일반적인 리턴값이 없는 성공   
 <%-- 	var STATUS_CODE_SUCCESS_XMLRETURN	= "<%=INFO.STATUS_CODE_SUCCESS_XMLRETURN%>"; //성공 xml 리턴값 있는 성공      --%>

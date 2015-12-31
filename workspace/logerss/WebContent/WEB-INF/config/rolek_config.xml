@@ -2,79 +2,67 @@
 <roles>
 
 <!-- 
-geust id를 가진것이  
+default id를 가진것이  
 인증없이 그냥 들리는 손님용입니다  이건 픽스 입니다,  무조건있어야합니다
+join엘리먼트의  type속성이  new면은 상속을 받지 않고 부모 fnc를 상속안받음
+type값없으면  기본으로 가져와서 merge합니다.
+type 이 delet이면은  상속을 받더라도 지웁니다. 또 자신에 포함하지 않습니다. 
  --> 
 <!-- 		<join url="/view"> -->
-<!-- 			<fnc name="C" value="false"/> -->
-<!-- 			<fnc name="R" value="true"/> -->
-<!-- 			<fnc name="U" value="false"/> -->
-<!-- 			<fnc name="D" value="false"/> -->
+<!-- 			<fnc id="C" value="false"/> -->
+<!-- 			<fnc id="R" value="true"/> -->
+<!-- 			<fnc id="U" value="false"/> -->
+<!-- 			<fnc id="D" value="false"/> -->
 <!-- 		</join> -->
 	
-	<role id="guest" type="default">
+	<role id="default">
 		<join url="/view">
-			<fnc name="R" value="true"/>
+			<fnc id="R" value="true"/>
+			<fnc id="IS_LOGIN" value="false"/>
 		</join>
 		<join url="/view/signin">
-			<fnc name="R" value="true"/>
+			<fnc id="R" value="true"/>
+			<fnc id="IS_LOGIN" value="false"/>
 		</join>
 		<join url="/view/signup">
-			<fnc name="R" value="true"/>
+			<fnc id="R" value="true"/>
+			<fnc id="IS_LOGIN" value="false"/>
 		</join>
 		<join url="/ajax/sign">
-			<fnc name="C" value="true"/>
+			<fnc id="SIGNUP" value="true"/>
+			<fnc id="SIGNIN" value="true"/>
+			<fnc id="IS_LOGIN" value="false"/>
 		</join>
-		<join url="/ajax/info"/>
+		<join url="/ajax/info">
+			<fnc id="R" value="true"/>
+			<fnc id="IS_LOGIN" value="false"/>
+		</join>
 	</role>
 	
-<!-- String atUrl="/ajax.*IN=info.*"; -->
-<!-- 	<role id="a" extends="guest" do="vvv"> -->
-<!-- 		<join url="/view"> -->
-<!-- 			<fnc name="D" value="true"></fnc> -->
-<!-- 		</join> -->
-<!-- 		<join url="/vava" type="new"> -->
-<!-- 			<fnc name="C" value="true"></fnc> -->
-<!-- 			<fnc name="Z" value="true"></fnc> -->
-<!-- 		</join> -->
-<!-- 	</role> -->
-	
-<!-- 	<role id="b" extends="a"> -->
-<!-- 		<join url="/view" type="new" > -->
-<!-- 			<fnc name="DD" value="false"></fnc> -->
-<!-- 		</join> -->
-<!-- 		<join url="/vava" > -->
-<!-- 			<fnc name="C" value="false"></fnc> -->
-<!-- 			<fnc name="A" value="true"></fnc> -->
-<!-- 			<fnc name="B" value="false"></fnc> -->
-<!-- 		</join> -->
-<!-- 	</role> -->
-	
-	
-<!-- 	<role id="b"></role> -->
-<!-- 	<role id="c"></role> -->
-<!-- 	<role id="d"></role> -->
-<!-- 	<role id="e"></role> -->
-<!-- 	<role id="f"></role> -->
-<!-- 	<role id="g"></role> -->
-<!-- 	<role id="h"></role> -->
-<!-- 	<role id="i"></role> -->
-<!-- 	<role id="j"></role> -->
-<!-- 	<role id="k"></role> -->
-<!-- 	<role id="l"></role> -->
-<!-- 	<role id="m"></role> -->
-<!-- 	<role id="n"></role> -->
-<!-- 	<role id="o"></role> -->
-<!-- 	<role id="p"></role> -->
-<!-- 	<role id="q"></role> -->
-<!-- 	<role id="r"></role> -->
-<!-- 	<role id="s"></role> -->
-<!-- 	<role id="t"></role> -->
-<!-- 	<role id="u"></role> -->
-<!-- 	<role id="v"></role> -->
-<!-- 	<role id="w"></role> -->
-<!-- 	<role id="x"></role> -->
-<!-- 	<role id="y"></role> -->
-<!-- 	<role id="z"></role> -->
+	<role id="normal" extends="default">
+		<join url="/view">
+			<fnc id="IS_LOGIN" value="true"/>
+		</join>
+		<join url="/view/signin" type="delete"/>
+		<join url="/view/signup" type="delete"/>
+		<join url="/view/mylog.*" type="new">
+			<fnc id="R" value="true"/>
+			<fnc id="C" value="true"/>
+			<fnc id="U" value="true"/>
+			<fnc id="D" value="true"/>
+			<fnc id="IS_LOGIN" value="true"/>
+		</join>
+		<join url="/ajax/sign" type="new">
+			<fnc id="SIGNOUT" value="true"/>
+			<fnc id="IS_LOGIN" value="true"/>
+		</join>
+		<join url="/ajax/mylog.*" type="new">
+			<fnc id="R" value="true"/>
+			<fnc id="C" value="true"/>
+			<fnc id="U" value="true"/>
+			<fnc id="D" value="true"/>
+			<fnc id="IS_LOGIN" value="true"/>
+		</join>
+	</role>
 	
 </roles>

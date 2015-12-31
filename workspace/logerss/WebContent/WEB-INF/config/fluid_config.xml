@@ -18,34 +18,51 @@
 	
 	
 	
-	
+	<!-- view 최상 -->
 	<template id="/view" extends="default-html">
-<!-- 		<view id="page-head-javascript" value="/WEB-INF/view/front-end/page-head.js" /> -->
-		<view id="page-head-css" 		value="" />
-		<view id="page-body" 			value="/WEB-INF/view/index.jsp" />
-		<view id="page-body-nav" 		value="/WEB-INF/view/include/nav.jsp" />
-		<view id="page-body-footer" 	value="/WEB-INF/view/include/footer.jsp" />
+<!-- 		<view id="page-head-javascript" value="/WEB-INF/view/front-end/page-head.js"/> -->
+		<view id="page-head-css" 		value=""/>
+		<view id="page-body" 			value="/WEB-INF/view/index.jsp"/>
+			<view id="page-body-nav" 		value="/WEB-INF/view/include/nav.jsp"/>
+			<view id="page-body-footer" 	value="/WEB-INF/view/include/footer.jsp"/>
 	</template>
-	
+
+	<!-- sign -->	
 	<template id="sign" extends="/view">
-		<view id="page-head-css" 	value="/front-end/bootstrap/3.3.6/docs/examples/signin/signin.css" />
+		<view id="page-head-css" 	value="/front-end/bootstrap/3.3.6/docs/examples/signin/signin.css"/>
 	</template>
 	<template id="/view/signin" extends="sign">
-		<view id="page-body" 		value="/WEB-INF/view/signin.jsp" />
+		<view id="page-body" 		value="/WEB-INF/view/signin.jsp"/>
 	</template>
 	<template id="/view/signup" extends="sign">
-		<view id="page-body" 		value="/WEB-INF/view/signup.jsp" />
+		<view id="page-body" 		value="/WEB-INF/view/signup.jsp"/>
 	</template>
+	
+	<!-- mylog -->	
+	<template id="mylog" extends="/view">
+		<view id="page-head-css" 			value="/front-end/bootstrap/3.3.6/docs/examples/offcanvas/offcanvas.css"/>
+		<view id="page-footer-javascript" 	value="/front-end/bootstrap/3.3.6/docs/examples/offcanvas/offcanvas.js"/>
+	</template>
+	<template id="/view/mylog" extends="mylog">
+		<view id="page-body" 				value="/WEB-INF/view/mylog/index.jsp" />
+	</template>
+	<template id="/view/mylog/new" extends="mylog">
+		<view id="page-body" 				value="/WEB-INF/view/mylog/new.jsp" />
+	</template>
+	<template id="/view/mylog/detail" extends="mylog">
+		<view id="page-body" 				value="/WEB-INF/view/mylog/detail.jsp" />
+	</template>
+	
 	
 	
 	
 	
 	<template id="fixtop" extends="default-html">
-		<view id="title" value="loggeress-fixtop" />
-		<view id="page-head-css" value="" />
-		<view id="page-head-javascript" value="" />
-		<view id="page-body" value="/WEB-INF/view/fixtop/fixtop.jsp" />
-		<view id="page-footer-javascript" value="/WEB-INF/view/fixtop/footer-javascript.jsp" />
+		<view id="title" value="loggeress-fixtop"/>
+		<view id="page-head-css" value=""/>
+		<view id="page-head-javascript" value=""/>
+		<view id="page-body" value="/WEB-INF/view/fixtop/fixtop.jsp"/>
+		<view id="page-footer-javascript" value="/WEB-INF/view/fixtop/footer-javascript.jsp"/>
 	</template>
 	
 </fluid>
