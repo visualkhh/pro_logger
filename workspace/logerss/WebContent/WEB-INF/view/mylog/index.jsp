@@ -95,15 +95,15 @@ EventUtil.addOnloadEventListener(function(){
             <a href="#" class="list-group-item active">MyLogList 
 			  <span class="fa fa-plus" aria-hidden="true"></span>
 			</a>
+            <a href="/view/mylog/detail" class="list-group-item">Item1</a>
             <a href="/view/mylog/detail" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
           </div>
         </div><!--/.sidebar-offcanvas-->
       </div><!--/row-->

@@ -52,7 +52,7 @@ EventUtil.addOnloadEventListener(function(){
             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
           </p>
           <div class="jumbotron">
-            <h1>Hello, world!</h1>
+            <h1>New Log</h1>
             <p>This is an example to show the potential of an offcanvas layout pattern in Bootstrap. Try some responsive-range viewport sizes to see it in action.</p>
           </div>
           <div class="row">
@@ -95,15 +95,15 @@ EventUtil.addOnloadEventListener(function(){
             <a href="#" class="list-group-item active">MyLogList 
 			  <span class="fa fa-plus" aria-hidden="true"></span>
 			</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
-            <a href="#" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
+            <a href="/view/mylog/detail" class="list-group-item">Link</a>
           </div>
         </div><!--/.sidebar-offcanvas-->
       </div><!--/row-->

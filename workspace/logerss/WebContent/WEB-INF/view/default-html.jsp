@@ -41,6 +41,9 @@
 		var before = param.onBeforeProcess;
 		var complet = param.onComplete;
 		var error = param.onError;
+		if(!param.data){
+			param.data = {};
+		}
 		param.data["REQUEST_KEY"] = JavaScriptUtil.getUniqueKey(); //유일한 값 
 		if(!title){
 			title=param.data.url+" loading...";
