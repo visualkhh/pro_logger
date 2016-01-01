@@ -3,9 +3,10 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="khh.property.util.PropertyUtil"%>
 <%@taglib prefix="fluid"  uri="http://visualkhh.com/fluid"%>
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?v=3.exp&region=KR"></script>
 <script type="text/javascript">
 var graph1 = undefined;
-var graphDataKSet = new GraphDataKSet();
+
 $( window ).resize(function() {
 	console.log($("#jumbotron").width()+" "+$("#jumbotron").height());
 	$("#can1").width($("#jumbotron").width());
@@ -19,10 +20,151 @@ $( window ).resize(function() {
 	
 	
 });
+
+var gsStatoin = new google.maps.LatLng(37.48144560453497, 126.88266361877436);
+var parliament = new google.maps.LatLng(37.4781527917781, 126.88218618556971);
+var marker;
+var map;
 EventUtil.addOnloadEventListener(function(){
 	
-	draw();
+// 	draw();
 	
+	
+	
+	
+	
+	
+	 var mapOptions = {
+				zoom: 13,
+				mapTypeId: google.maps.MapTypeId.ROADMAP,
+				center: gsStatoin
+			  };
+
+
+			  map = new google.maps.Map(document.getElementById("map_canvas"),
+				  mapOptions);
+
+			  marker = new google.maps.Marker({
+				map:map,
+				animation: google.maps.Animation.DROP,
+				position: parliament
+			  });
+//			  google.maps.event.addListener(marker, 'click', toggleBounce);
+
+			  google.maps.event.addListener(map, 'click', function(event) {
+					alert(event.latLng);
+				});
+			  
+			  
+// 			  var flightPlanCoordinates = [
+// 			                               new google.maps.LatLng(37.6617390755564, 127.03791291452944),
+// 			                               new google.maps.LatLng(21.291982, -157.821856),
+// 			                               new google.maps.LatLng(-18.142599, 178.431),
+// 			                               new google.maps.LatLng(-27.46758, 153.027892)
+// 			                             ];
+			  
+
+
+				  //flightPath.setMap(map);
+				  
+// 	graph1.setData(graphDataKSet);
+// 	graph1.rendering();
+// 	graph1.onMouseTraking();
+// 	graph1.onDrag();
+				 $("#gen").click(function(){
+					 var flightPlanCoordinates = new Array();
+					 var xmlDoc = $.parseXML( $("#data").val() );
+					 var xml = $( xmlDoc );
+					 var trkpt = xml.find( "trkpt" );
+					 var el = xml.find( "ele" );
+					 var cad = xml.find( "gpxtpx\\:cad" );//[nodeName=rs:data]
+					 var hr = xml.find( "gpxtpx\\:hr" );//[nodeName=rs:data]
+					 var tp = xml.find( "gpxtpx\\:atemp" );//[nodeName=rs:data]
+
+					 trkpt.each(function(index){
+						 flightPlanCoordinates.push(new google.maps.LatLng($(this).attr("lat"), $(this).attr("lon")));
+					 });
+					 
+					var graphDataKSet = new GraphDataKSet();		  
+					var data = new Array();
+					var x=1;
+					 cad.each(function(index){
+						 data.push({"x":index,"y":Number($(this).text())});
+						 //console.log(index+", "+$(this).text());
+					 });
+					 
+					var graphKData = new GraphDataK("data0", data);
+					graphKData.setType("line");
+					graphKData.setWidth(10);
+					graphKData.setFillStyle(GraphKUtil.getRandomColor());
+					graphKData.setStrokeStyle(GraphKUtil.getRandomColor());
+					graphKData.setFillStyle(GraphKUtil.getRandomColor());
+
+					
+					var hdata = new Array();
+					hr.each(function(index){
+						hdata.push({"x":index,"y":Number($(this).text())});
+					 });
+					var hgraphKData = new GraphDataK("data0", hdata);
+					hgraphKData.setType("line");
+					hgraphKData.setWidth(10);
+					hgraphKData.setFillStyle(GraphKUtil.getRandomColor());
+					hgraphKData.setStrokeStyle(GraphKUtil.getRandomColor());
+					hgraphKData.setFillStyle(GraphKUtil.getRandomColor());
+
+					
+					var tdata = new Array();
+					tp.each(function(index){
+						tdata.push({"x":index,"y":Number($(this).text())});
+					 });
+					var tgraphKData = new GraphDataK("data0", tdata);
+					tgraphKData.setType("line");
+					tgraphKData.setWidth(10);
+					tgraphKData.setFillStyle(GraphKUtil.getRandomColor());
+					tgraphKData.setStrokeStyle(GraphKUtil.getRandomColor());
+					tgraphKData.setFillStyle(GraphKUtil.getRandomColor());
+					
+
+					
+					var edata = new Array();
+					el.each(function(index){
+						edata.push({"x":index,"y":Number($(this).text())});
+					 });
+					var egraphKData = new GraphDataK("data0", edata);
+					egraphKData.setType("line");
+					egraphKData.setWidth(10);
+					egraphKData.setFillStyle(GraphKUtil.getRandomColor());
+					egraphKData.setStrokeStyle(GraphKUtil.getRandomColor());
+					egraphKData.setFillStyle(GraphKUtil.getRandomColor());
+					
+					
+					
+					
+					
+					var graphDataKSet = new GraphDataKSet();
+					graphDataKSet.push(graphKData);
+					graphDataKSet.push(hgraphKData);
+					graphDataKSet.push(tgraphKData);
+					graphDataKSet.push(egraphKData);
+					graph1 = new GraphK("#can1");
+					graph1.chartDataVisible 		= false;
+					graph1.setData(graphDataKSet);
+					graph1.rendering();
+					graph1.onMouseTraking();
+					graph1.onDrag();
+					
+					
+					
+					  var flightPath = new google.maps.Polyline({
+						    path: flightPlanCoordinates,
+						    strokeColor: "#FF0000",
+						    strokeOpacity: 1.0,
+						    strokeWeight: 2
+						  });
+					 flightPath.setMap(map);
+				 });
+				
+				  
 	
 	
 });
@@ -80,60 +222,6 @@ function draw(){
 //		graphDataKSet.push(getTempData("data3","arc",5)); 
 //		graphDataKSet.push(getTempData("data3","arc",5)); 
 //		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
-//		graphDataKSet.push(getTempData("data3","arc",5)); 
 	graph1.setData(graphDataKSet);
 	graph1.rendering();
 	graph1.onMouseTraking();
@@ -171,11 +259,19 @@ function draw(){
           <p class="pull-right visible-xs">
             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
           </p>
-          <div class="jumbotron" id="jumbotron">
+          <div id="map_canvas" class="jumbotron" style="height:500px;"></div>
+          <div class="jumbotron" id="jumbotron" >
           <canvas id="can1" width="700" height="500"></canvas>
 <!--             <h1>Hello, world!</h1> -->
 <!--             <p>This is an example to show the potential of an offcanvas layout pattern in Bootstrap. Try some responsive-range viewport sizes to see it in action.</p> -->
           </div>
+			<div class="form-group">
+				<label for="comment">Comment:</label>
+				<textarea class="form-control" rows="5" id="data"></textarea>
+			</div>
+		<button type="button" class="btn btn-default btn-lg" id="gen">
+		  <span class="glyphicon glyphicon-star" aria-hidden="true"></span> Star
+		</button>
           <div class="row">
             <div class="col-xs-6 col-lg-4">
               <h2>Heading</h2>

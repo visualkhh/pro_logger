@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <compact>
 <!-- 
-<method ..type="compact-init-method">
-			<class classpath="javax.servlet.ServletConfig" type="compact-injection-parameter"/>
+<method ..type="init-method">
+			<class classpath="javax.servlet.ServletConfig" type="bind-parameter"/>
 </method>
-type="compact-init-method"  을하면 init 서블릿 메서드 탈때  injection을해준다.
-type="compact-service-method"  을하면 service 서블릿 메서드 탈때  injection을해준다.
+type="init-method"  을하면 init 서블릿 메서드 탈때  injection을해준다.
+type="service-method"  을하면 service 서블릿 메서드 탈때  injection을해준다.
  -->
 	<!-- class start-->
 	<class id="connectionCreator" classpath="loggerss.service.classs.db.ConnectionCreator"/>      
@@ -22,9 +22,6 @@ type="compact-service-method"  을하면 service 서블릿 메서드 탈때  inj
 	</class>
 	
 		<!-- execute services -->
-<!-- 		<class id="session_service" classpath="loggerss.service.Session"> -->
-<!-- 			<constructor><class extends="dbTerminal"/></constructor> -->
-<!-- 		</class> -->
 		<class id="info_service" classpath="loggerss.service.Info">
 			<constructor><class extends="dbTerminal"/></constructor>
 		</class>
@@ -47,14 +44,9 @@ type="compact-service-method"  을하면 service 서블릿 메서드 탈때  inj
 	</class>
 	<!-- views end-->
 	
-	
 
 	<!--services start-->
 	<class id="infoController"  url="/ajax.*" classpath="khh.web.jsp.framework.compact.controller.URIDivisionService" type="service">
-<!-- 		<method id="info" name="addObject"> -->
-<!-- 			<class classpath="java.lang.String" value="session"/> -->
-<!-- 			<class extends="session_service"/> -->
-<!-- 		</method> -->
 		<method id="info" name="addObject">
 			<class classpath="java.lang.String" value="/ajax/info"/>
 			<class extends="info_service"/>

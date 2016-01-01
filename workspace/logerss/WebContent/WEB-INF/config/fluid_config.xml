@@ -17,10 +17,8 @@
 	</template>
 	
 	
-	
 	<!-- view 최상 -->
 	<template id="/view" extends="default-html">
-<!-- 		<view id="page-head-javascript" value="/WEB-INF/view/front-end/page-head.js"/> -->
 		<view id="page-head-css" 		value=""/>
 		<view id="page-body" 			value="/WEB-INF/view/index.jsp"/>
 			<view id="page-body-nav" 		value="/WEB-INF/view/include/nav.jsp"/>
@@ -53,16 +51,5 @@
 		<view id="page-body" 				value="/WEB-INF/view/mylog/detail.jsp" />
 	</template>
 	
-	
-	
-	
-	
-	<template id="fixtop" extends="default-html">
-		<view id="title" value="loggeress-fixtop"/>
-		<view id="page-head-css" value=""/>
-		<view id="page-head-javascript" value=""/>
-		<view id="page-body" value="/WEB-INF/view/fixtop/fixtop.jsp"/>
-		<view id="page-footer-javascript" value="/WEB-INF/view/fixtop/footer-javascript.jsp"/>
-	</template>
 	
 </fluid>

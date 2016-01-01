@@ -10,9 +10,9 @@ public class ConnectionCreator implements ConnectionCreator_I {
 
 	@Override
 	public Connection getMakeConnection() throws Exception {
-		return ConnectionUtil.getConnection(ConnectionUtil.MYSQL, "localhost", ConnectionUtil.MYSQL_DAFAULT_PORT,
-				"logersstest","root","javadev");
-		//return ConnectionWebUtil.getConnectionByJNDI("jdbc/TestDB");
+//		return ConnectionUtil.getConnection(ConnectionUtil.MYSQL, "localhost", ConnectionUtil.MYSQL_DAFAULT_PORT,
+//				"logersstest","root","ffffffff");
+		return ConnectionWebUtil.getConnectionByJNDI("jdbc/TestDB");
 	}
 
 }

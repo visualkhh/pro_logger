@@ -2,19 +2,13 @@
 <roles>
 
 <!-- 
-default id를 가진것이  
-인증없이 그냥 들리는 손님용입니다  이건 픽스 입니다,  무조건있어야합니다
-join엘리먼트의  type속성이  new면은 상속을 받지 않고 부모 fnc를 상속안받음
-type값없으면  기본으로 가져와서 merge합니다.
-type 이 delet이면은  상속을 받더라도 지웁니다. 또 자신에 포함하지 않습니다. 
+default id를 가진것이  인증없이 그냥 들리는 손님용입니다  무조건있어야합니다
+join엘리먼트의 
+type = new : 상속을 받지 않고 재정의합니다.
+type = 없음  : 부모거 상속 한뒤 자신거와 merge합니다.
+type = delet  :  상속을 받더라도 지웁니다. 또 자신에 포함하지 않습니다. 
  --> 
-<!-- 		<join url="/view"> -->
-<!-- 			<fnc id="C" value="false"/> -->
-<!-- 			<fnc id="R" value="true"/> -->
-<!-- 			<fnc id="U" value="false"/> -->
-<!-- 			<fnc id="D" value="false"/> -->
-<!-- 		</join> -->
-	
+
 	<role id="default">
 		<join url="/view">
 			<fnc id="R" value="true"/>
