@@ -179,7 +179,7 @@
 		</div>
 	</body>
   <!-- page-body -->
-	<fluid:insertView id="page-body"/>
+	<fluid:insertView id="page-body" exception="true"/>
   <%--</body>--%>
   <!-- default-footer-javascript -->
   <fluid:insertView id="default-footer-javascript"/>

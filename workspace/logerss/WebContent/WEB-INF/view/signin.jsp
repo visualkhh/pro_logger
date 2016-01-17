@@ -44,7 +44,7 @@ function ajaxSignInCallBack(data,readyState,status){
 	<%--nav--%>
     <div class="container" style="margin-top:40px">
 		<div class="row">
-			<div class="col-sm-6 col-md-4 col-md-offset-4">
+			<div class="col-sm-6 col-md-4 col-md-offset-4 col-sm-offset-4">
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<strong> Sign in to continue</strong>

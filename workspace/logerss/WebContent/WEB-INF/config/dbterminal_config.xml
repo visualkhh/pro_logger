@@ -19,6 +19,10 @@
 		INSERT INTO LO_USER_INFO (NAME,EMAIL,PASSWORD,ROLE_BASE_SEQ)
 		VALUES (#name#,#email#,#password#,'1')
 	</insert>
+	<insert id="insert_gis" >
+		INSERT INTO LO_GIS (LAT,LNG)
+		VALUES (#lat#,#lng#)
+	</insert>
 	 
 	<delete id="cool_delete" >
 		delete from insert_test where seq=#seq#

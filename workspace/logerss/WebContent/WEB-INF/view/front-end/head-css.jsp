@@ -23,6 +23,7 @@ body{margin-top:20px;}
 	.fa-fw3x{font-size: 3em;}
 	.fa-fw4x{font-size: 4em;}
 	.fa-fw5x{font-size: 5em;}
+	.fa-fw6x{font-size: 6em;}
 </style>
     <!-- Custom styles for this template -->
 <!--     <link href="/front-end/bootstrap/3.3.6/docs/examples/navbar-fixed-top/navbar-fixed-top.css" rel="stylesheet"> -->

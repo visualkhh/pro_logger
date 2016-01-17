@@ -80,7 +80,7 @@ function ajaxCallBack(data,readyState,status){
             </ul>
         </div>
       </div>
-${ROLEK.pageRole}  <br>
+${ROLEK.join}  <br>
 ${ROLEK.session}
 	<!-- page END -->
 	<fluid:insertView id="page-body-footer"/>

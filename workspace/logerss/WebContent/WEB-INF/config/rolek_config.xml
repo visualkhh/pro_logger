@@ -37,20 +37,24 @@ type = delet  :  상속을 받더라도 지웁니다. 또 자신에 포함하지
 		<join url="/view">
 			<fnc id="IS_LOGIN" value="true"/>
 		</join>
-		<join url="/view/signin" type="delete"/>
-		<join url="/view/signup" type="delete"/>
-		<join url="/view/mylog.*" type="new">
+		<join url="/user.*"  redirect_after_url="/user(.+).*" redirect="/WEB-INF/users/${ROLEK.session.USER_EMAIL}" type="new">
+			<fnc id="R" value="true"/>
+		</join>
+		<join url="/view/log.*" type="new">
 			<fnc id="R" value="true"/>
 			<fnc id="C" value="true"/>
 			<fnc id="U" value="true"/>
 			<fnc id="D" value="true"/>
 			<fnc id="IS_LOGIN" value="true"/>
 		</join>
-		<join url="/ajax/sign" type="new">
-			<fnc id="SIGNOUT" value="true"/>
+		<join url="/view/profile.*" type="new">
+			<fnc id="R" value="true"/>
+			<fnc id="C" value="true"/>
+			<fnc id="U" value="true"/>
+			<fnc id="D" value="true"/>
 			<fnc id="IS_LOGIN" value="true"/>
 		</join>
-		<join url="/ajax/mylog.*" type="new">
+		<join url="/ajax/.*" type="new">
 			<fnc id="R" value="true"/>
 			<fnc id="C" value="true"/>
 			<fnc id="U" value="true"/>

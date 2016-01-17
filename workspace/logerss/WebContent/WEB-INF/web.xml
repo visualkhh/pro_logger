@@ -48,6 +48,9 @@
 		<url-pattern>/ajax/*</url-pattern>
 	</servlet-mapping>
 	
+
+	
+	
 	
 	<filter>
 		<filter-name>RoleK</filter-name>
@@ -64,6 +67,10 @@
 	<filter-mapping>
 		<filter-name>RoleK</filter-name>
 		<url-pattern>/ajax/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>RoleK</filter-name>
+		<url-pattern>/user/*</url-pattern>
 	</filter-mapping>
 	
 	

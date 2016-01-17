@@ -43,20 +43,27 @@
             <span class="icon-bar"></span>
           </button>
           <span class="navbar-brand" style="">
-          <a href="/view" style="color:rgb(255,162,6);"><img src="<fluid:insertString id="icon"/>" style="float: left;"/>logerss</a>
-          <rolek:insertString id="IS_LOGIN" equals="true">
-          <a style="font-size: 14px; color:#777;  margin-left: 50px; " href="/view/mylog" >MyLog <span class="fa fa-bar-chart"></span></a>
-          <a style="font-size: 14px; color:#777;  margin-left: 30px; " href="/view/mylog/new" >NewLog <span class="fa fa-plus"></span></a>
-          </rolek:insertString>
+	          <a href="/view" style="color:rgb(255,162,6);"><img src="<fluid:insertString id="icon"/>" align="middle"/>logerss</a>
+	          <rolek:insertString id="IS_LOGIN" equals="true">
+	          <li class="nav dropdown" style="float: right;">
+		          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="font-size: 14px; color:#777;  margin-left: 50px; " href="/view/mylog" >
+		          <img class="img-circle" src="/user/profile.png" alt="Generic placeholder image" width="20" height="20"/>${ROLEK.session.USER_NAME}<span class="caret"></span>
+		          </a>
+				<ul class="dropdown-menu">
+					<li><a href="/view/log/addlog"><span class="fa fa-plus" aria-hidden="true"></span> Add Log</a> </li>
+					<li><a href="/view/log/mylog"><span class="fa fa-bar-chart" aria-hidden="true"></span> My Log</a> </li>
+	                <li role="separator" class="divider"></li>
+<!-- 	                <li class="dropdown-header">Profile</li> -->
+	                <li><a href="/view/profile">Edit profile</a></li>
+              	</ul>
+	          </li>
+	          </rolek:insertString>
           </span>
 <%--           <a class="navbar-brand" href="/view" style="color:rgb(255,162,6);"><img src="<fluid:insertString id="icon"/>" style="float: left;"/>logerss</a> --%>
           
 
         </div>
 
-<%--          <rolek:insertString id="IS_LOGIN" equals="true"> --%>
-<!-- 	          <li><a href="/view/mylog" >MyLog <span class="fa fa-bar-chart"></span></a></li> -->
-<%--          </rolek:insertString> --%>
 
         <div id="navbar" class="navbar-collapse collapse">
 <!--           <ul class="nav navbar-nav"> -->
@@ -65,11 +72,6 @@
 <!--             <li><a href="#contact">Contact</a></li> -->
 <!--           </ul> -->
           <ul class="nav navbar-nav navbar-right">
-          <li>
-          <form class="navbar-form">
-            <input type="text" class="form-control" placeholder="Search log...">
-          </form>
-          </li>
 <%--           ${ROLEK.info} --%>
           	<rolek:insertString id="IS_LOGIN" equals="false">
             <li><a href="/view/signup"><span class="fa fa-registered" aria-hidden="true"></span> Sign up</a> </li>
@@ -78,6 +80,11 @@
           	<rolek:insertString id="IS_LOGIN" equals="true">
             <li><a href="#" id="signout"><span class="fa fa-sign-out" aria-hidden="true"></span>Sign out</a> </li>
             </rolek:insertString>
+          <li>
+          <form class="navbar-form">
+            <input type="text" class="form-control" placeholder="Search log...">
+          </form>
+          </li>
 <!--             <li class="active"><a href="./">Fixed top <span class="sr-only">(current)</span></a></li> -->
             
 <!--             <li class="dropdown"> -->

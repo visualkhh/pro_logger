@@ -22,6 +22,9 @@ type="service-method"  을하면 service 서블릿 메서드 탈때  injection�
 	</class>
 	
 		<!-- execute services -->
+		<class id="gis_service" classpath="loggerss.service.Gis">
+			<constructor><class extends="dbTerminal"/></constructor>
+		</class>
 		<class id="info_service" classpath="loggerss.service.Info">
 			<constructor><class extends="dbTerminal"/></constructor>
 		</class>
@@ -47,6 +50,10 @@ type="service-method"  을하면 service 서블릿 메서드 탈때  injection�
 
 	<!--services start-->
 	<class id="infoController"  url="/ajax.*" classpath="khh.web.jsp.framework.compact.controller.URIDivisionService" type="service">
+		<method id="info" name="addObject">
+			<class classpath="java.lang.String" value="/ajax/gis"/>
+			<class extends="gis_service"/>
+		</method>
 		<method id="info" name="addObject">
 			<class classpath="java.lang.String" value="/ajax/info"/>
 			<class extends="info_service"/>

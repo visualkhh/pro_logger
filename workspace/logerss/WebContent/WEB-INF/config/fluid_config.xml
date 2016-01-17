@@ -6,6 +6,7 @@
 
 	</template>
 
+
 	<template id="default-html" 				value="/WEB-INF/view/default-html.jsp" extends="default">
 		<view id="icon" 						value="/front-end/logerss/icon/logerss.icon" />
 		<view id="meta-description" 			value="loging" />
@@ -36,19 +37,28 @@
 		<view id="page-body" 		value="/WEB-INF/view/signup.jsp"/>
 	</template>
 	
-	<!-- mylog -->	
-	<template id="mylog" extends="/view">
+	<!-- log -->	
+	<template id="log" extends="/view">
 		<view id="page-head-css" 			value="/front-end/bootstrap/3.3.6/docs/examples/offcanvas/offcanvas.css"/>
 		<view id="page-footer-javascript" 	value="/front-end/bootstrap/3.3.6/docs/examples/offcanvas/offcanvas.js"/>
 	</template>
-	<template id="/view/mylog" extends="mylog">
-		<view id="page-body" 				value="/WEB-INF/view/mylog/index.jsp" />
+	<template id="/view/log/mylog" extends="log">
+		<view id="page-body" 				value="/WEB-INF/view/log/mylog.jsp" />
 	</template>
-	<template id="/view/mylog/new" extends="mylog">
-		<view id="page-body" 				value="/WEB-INF/view/mylog/new.jsp" />
+	<template id="/view/log/addlog" extends="log">
+		<view id="page-body" 				value="/WEB-INF/view/log/addlog.jsp" />
 	</template>
-	<template id="/view/mylog/detail" extends="mylog">
-		<view id="page-body" 				value="/WEB-INF/view/mylog/detail.jsp" />
+	<template id="/view/log/detaillog" extends="log">
+		<view id="page-body" 				value="/WEB-INF/view/log/detaillog.jsp" />
+	</template>
+	
+	<!-- profile -->	
+	<template id="profile" extends="/view">
+		<view id="page-head-css" 			value="/front-end/bootstrap/3.3.6/docs/examples/offcanvas/offcanvas.css"/>
+		<view id="page-footer-javascript" 	value="/front-end/bootstrap/3.3.6/docs/examples/offcanvas/offcanvas.js"/>
+	</template>
+	<template id="/view/profile" extends="profile">
+		<view id="page-body" 				value="/WEB-INF/view/profile/index.jsp" />
 	</template>
 	
 	
