@@ -10,15 +10,11 @@ type="service-method"  을하면 service 서블릿 메서드 탈때  injection�
 	<!-- class start-->
 	<class id="connectionCreator" classpath="loggerss.service.classs.db.ConnectionCreator"/>      
 	<class id="dbTerminal" classpath="khh.web.jsp.framework.compact.db.DBTerminalResovler">
-		<constructor>
+		<constructor type="init-method">
+			<class classpath="javax.servlet.ServletConfig" type="bind-parameter"/>
+			<class classpath="java.lang.String" value="/WEB-INF/config/dbterminal_config.xml"/>
 			<class extends="connectionCreator"/>
 		</constructor>
-		<method id="setServletConfig" name="setServletConfig" type="init-method">
-			<class classpath="javax.servlet.ServletConfig" type="bind-parameter"/>
-		</method>
-		<method id="init" name="init">
-			<class classpath="java.lang.String" value="/WEB-INF/config/dbterminal_config.xml"/>
-		</method>
 	</class>
 	
 		<!-- execute services -->

@@ -7,6 +7,11 @@
 
 <!-- <link rel="stylesheet" href="/front-end/bootstrapcdn/css/font-awesome.min.css"> -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+<!-- <link href="/front-end/bootstrap/plugin/slider/css/slider.css" rel="stylesheet"> -->
+<link href="/front-end/bootstrap/plugin/bootstrap-slider/dist/css/bootstrap-slider.css" rel="stylesheet">
+<link href="/front-end/bootstrap/plugin/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+
 <style type="text/css">
 body{margin-top:20px;}
 

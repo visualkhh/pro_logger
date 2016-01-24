@@ -43,7 +43,7 @@ function ajaxCallBack(data,readyState,status){
 
   <!-- page Start -->
     <div class="jumbotron"  style="color:rgb(255,175,15); height:500px; background: no-repeat -0px 0 / cover url(/front-end/img/IMG_9619-PANO.jpg);">
-      <div class="container" style="margin-top:4em;">
+      <div class="container" >
         <h1>Hello, Log your life!</h1>
         <p>It analyzes to compare the Log.</p>
         <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
@@ -81,7 +81,8 @@ function ajaxCallBack(data,readyState,status){
         </div>
       </div>
 ${ROLEK.join}  <br>
-${ROLEK.session}
+${ROLEK.session}<br>
+${ROLEK.USER_EMAIL}
 	<!-- page END -->
 	<fluid:insertView id="page-body-footer"/>
     </div> <!-- /container -->

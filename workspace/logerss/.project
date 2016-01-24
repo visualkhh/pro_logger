@@ -75,22 +75,32 @@
 			<locationURI>PARENT-7-PROJECT_LOC/git/jsputil-visualkhh/webJSPUtil/WebContent/WEB-INF/tld/RoleK.tld</locationURI>
 		</link>
 		<link>
-			<name>WebContent/front-end/graphk/graphk.html</name>
+			<name>WebContent/front-end/graphK/README.md</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/git/graphK/README.md</locationURI>
+		</link>
+		<link>
+			<name>WebContent/front-end/graphK/graphk.html</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/git/graphK/graphk.html</locationURI>
 		</link>
 		<link>
-			<name>WebContent/front-end/graphk/graphk.js</name>
+			<name>WebContent/front-end/graphK/graphk.js</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/git/graphK/graphk.js</locationURI>
 		</link>
 		<link>
-			<name>WebContent/front-end/graphk/graphk_object.js</name>
+			<name>WebContent/front-end/graphK/graphk2.html</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/git/graphK/graphk2.html</locationURI>
+		</link>
+		<link>
+			<name>WebContent/front-end/graphK/graphk_object.js</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/git/graphK/graphk_object.js</locationURI>
 		</link>
 		<link>
-			<name>WebContent/front-end/graphk/graphk_util.js</name>
+			<name>WebContent/front-end/graphK/graphk_util.js</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/git/graphK/graphk_util.js</locationURI>
 		</link>

@@ -54,7 +54,6 @@ EventUtil.addOnloadEventListener(function(){
 				center: gsStatoin
 			  };
 	map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
-
 			  marker = new google.maps.Marker({
 				map:map,
 				animation: google.maps.Animation.DROP,

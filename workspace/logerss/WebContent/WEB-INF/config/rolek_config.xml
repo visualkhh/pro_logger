@@ -14,6 +14,7 @@ type = delet  :  상속을 받더라도 지웁니다. 또 자신에 포함하지
 			<fnc id="R" value="true"/>
 			<fnc id="IS_LOGIN" value="false"/>
 		</join>
+		<join url="/view/test"/>
 		<join url="/view/signin">
 			<fnc id="R" value="true"/>
 			<fnc id="IS_LOGIN" value="false"/>
@@ -37,7 +38,7 @@ type = delet  :  상속을 받더라도 지웁니다. 또 자신에 포함하지
 		<join url="/view">
 			<fnc id="IS_LOGIN" value="true"/>
 		</join>
-		<join url="/user.*"  redirect_after_url="/user(.+).*" redirect="/WEB-INF/users/${ROLEK.session.USER_EMAIL}" type="new">
+		<join url="/user.*"  forward="${/WEB-INF/users/}${USER_EMAIL}/user(.+).*"  type="new">
 			<fnc id="R" value="true"/>
 		</join>
 		<join url="/view/log.*" type="new">

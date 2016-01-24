@@ -8,3 +8,7 @@
     <script src="/front-end/bootstrap/3.3.6/dist/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="/front-end/bootstrap/3.3.6/docs/assets/js/ie10-viewport-bug-workaround.js"></script>
+    <!-- bootstrap plugin -->
+<!-- 	<script src="/front-end/bootstrap/plugin/slider/js/bootstrap-slider.js"></script> -->
+<!-- 	<script src="/front-end/bootstrap/plugin/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min2.js"></script> -->
+    

@@ -14,12 +14,15 @@ type="compact-service-method"  을하면 service 서블릿 메서드 탈때  inj
 	<!-- views end-->
 	
 	
+	<class id="fluidResovler" url="/view.*" classpath="khh.web.jsp.framework.compact.view.FluidURIViewResovler" >
+			<constructor type="init-method">
+				<class classpath="javax.servlet.ServletConfig" type="bind-parameter"/>
+				<class  classpath="java.lang.String" value="/WEB-INF/config/fluid_config.xml"/>
+			</constructor>
+	</class>
 
 	<!--services start-->
-	<class id="defaultView" url="/view.*" classpath="khh.web.jsp.framework.compact.view.FluidURIViewResovler" type="service" order="default">
-		<method id="setConfigPath" name="setConfigPath">
-			<class  classpath="java.lang.String" value="/WEB-INF/config/fluid_config.xml"/>
-		</method>
+	<class id="defaultView" url="/view.*" extends="fluidResovler" type="service" >
 		<rmethod id="doRequest" name="doRequest" type="service-method">
 			<class classpath="javax.servlet.http.HttpServletRequest" type="bind-parameter"/>
 			<class classpath="javax.servlet.http.HttpServletResponse" type="bind-parameter"/>

@@ -98,19 +98,19 @@ public class Sign {
 			DBTResultSetContainer dc = db.executeMapQuery("select_user_find",param);
 			for (int i = 0; i < dc.size(); i++) {
 	    		 DBTResultRecord row = dc.get(i);
-	    		 role.putSession("USER_NAME", 			row.getString("NAME"));
-	    		 role.putSession("USER_EMAIL", 		row.getString("EMAIL"));
-	    		 role.putSession("USER_PASSWORD", 		row.getString("PASSWORD"));
-	    		 role.putSession("USER_ROLE_BASE_SEQ", row.getString("ROLE_BASE_SEQ"));
-	    		 role.putSession("USER_ROLE_SEQ", 		row.getString("ROLE_SEQ"));
-	    		 role.putSession("USER_ROLE_NAME", 	row.getString("ROLE_NAME"));
+	    		 role.put("USER_NAME", 			row.getString("NAME"));
+	    		 role.put("USER_EMAIL", 		row.getString("EMAIL"));
+	    		 role.put("USER_PASSWORD", 		row.getString("PASSWORD"));
+	    		 role.put("USER_ROLE_BASE_SEQ", row.getString("ROLE_BASE_SEQ"));
+	    		 role.put("USER_ROLE_SEQ", 		row.getString("ROLE_SEQ"));
+	    		 role.put("USER_ROLE_NAME", 	row.getString("ROLE_NAME"));
 	    		 //row.getString("USER_NAME",row.get)
 	    		// for (int j = 0; j < row.size(); j++) {
 	    			 //role.putInfo("USER_ROLE", value);
 	    		// }
 			}
 			if(dc.size()>0){
-				ArrayList<Join> baseJoin = RoleK.getBaseJoin(role.getSession("USER_ROLE_NAME"));
+				ArrayList<Join> baseJoin = RoleK.getBaseJoin(role.get("USER_ROLE_NAME"));
 				/*여기에 고객role로  덮어버릴건 버리고..baseRole...*/
 				role.setJoinList(baseJoin);
 				request.setAttribute("STATUS_CODE", INFO.STATUS_CODE_SUCCESS);

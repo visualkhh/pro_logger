@@ -1,5 +1,6 @@
 <%@taglib prefix="fluid"  uri="http://visualkhh.com/fluid"%>
 <%@taglib prefix="rolek"  uri="http://visualkhh.com/rolek"%>
+
 <rolek:insertString id="IS_LOGIN" equals="true">
 	<script type="text/javascript">
 	EventUtil.addOnloadEventListener(function(){
@@ -47,11 +48,11 @@
 	          <rolek:insertString id="IS_LOGIN" equals="true">
 	          <li class="nav dropdown" style="float: right;">
 		          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="font-size: 14px; color:#777;  margin-left: 50px; " href="/view/mylog" >
-		          <img class="img-circle" src="/user/profile.png" alt="Generic placeholder image" width="20" height="20"/>${ROLEK.session.USER_NAME}<span class="caret"></span>
+		          <img class="img-circle" src="/user/profile.png" alt="Generic placeholder image" width="20" height="20"/> ${ROLEK.USER_NAME}<span class="caret"></span>
 		          </a>
 				<ul class="dropdown-menu">
-					<li><a href="/view/log/addlog"><span class="fa fa-plus" aria-hidden="true"></span> Add Log</a> </li>
-					<li><a href="/view/log/mylog"><span class="fa fa-bar-chart" aria-hidden="true"></span> My Log</a> </li>
+<!-- 					<li><a href="/view/log/addlog"><span class="fa fa-plus" aria-hidden="true"></span> Add Log</a> </li> -->
+					<li><a href="/view/log"><span class="fa fa-bar-chart" aria-hidden="true"></span> My Log</a> </li>
 	                <li role="separator" class="divider"></li>
 <!-- 	                <li class="dropdown-header">Profile</li> -->
 	                <li><a href="/view/profile">Edit profile</a></li>
