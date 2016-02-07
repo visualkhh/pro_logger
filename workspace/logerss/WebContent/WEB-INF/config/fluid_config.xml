@@ -3,12 +3,13 @@
 
 	<bypass>
 		<!-- forward_after_url="/(.+).*" -->
-		<url pattern=".*\.form" forward="${/WEB-INF}.*\.${jsp}"/>
+		<url pattern=".*\.form" forward="${'/WEB-INF'}.*\.${'jsp'}"/>
 	</bypass>
 
 	<template id="default">
 		<view id="lang" 		value="en" />
-		<view id="title" 		value="loggeress" />
+		<view id="name" 		value="logerss" />
+		<view id="title" 		value="logerss" />
 
 	</template>
 	<template id="default-html" 				value="/WEB-INF/view/default-html.jsp" extends="default">
@@ -48,27 +49,33 @@
 	
 	<!-- log -->	
 	<template id="log" extends="/view">
-		<!--  view id="page-head-css" 			value="/front-end/bootstrap/3.3.6/docs/examples/offcanvas/offcanvas.css"/ -->
-		<!-- view id="page-footer-javascript" 	value="/front-end/bootstrap/3.3.6/docs/examples/offcanvas/offcanvas.js"/-->
 	</template>
 	<template id="/view/log" extends="log">
 		<view id="page-body" 				value="/WEB-INF/view/log/log.jsp" />
 	</template>
-<!-- 	<template id="/view/log/mylog" extends="log"> -->
-<!-- 		<view id="page-body" 				value="/WEB-INF/view/log/mylog.jsp" /> -->
-<!-- 	</template> -->
-<!-- 	<template id="/view/log/addlog" extends="log"> -->
-<!-- 		<view id="page-body" 				value="/WEB-INF/view/log/addlog.jsp" /> -->
-<!-- 	</template> -->
-<!-- 	<template id="/view/log/detaillog" extends="log"> -->
-<!-- 		<view id="page-body" 				value="/WEB-INF/view/log/detaillog.jsp" /> -->
-<!-- 	</template> -->
+	
+	<!-- search -->	
+	<template id="search" extends="/view">
+	</template>
+	<template id="/view/search" extends="search">
+		<view id="page-body" 				value="/WEB-INF/view/search/search.jsp" />
+	</template>
+	
+	<!-- gis -->	
+	<template id="gis" extends="/view">
+	</template>
+	<template id="/view/gis/opengis" extends="gis">
+		<view id="page-body" 				value="/WEB-INF/view/gis/opengis.jsp" />
+	</template>
+	
 	
 	<!-- profile -->	
 	<template id="profile" extends="/view">
+		<view id="page-head-css" 				value="/front-end/bootstrap/3.3.6/docs/examples/offcanvas/offcanvas.css" />
+		<view id="page-head-javascript" 				value="/front-end/bootstrap/3.3.6/docs/examples/offcanvas/offcanvas.js" />
 	</template>
 	<template id="/view/profile" extends="profile">
-		<view id="page-body" 				value="/WEB-INF/view/profile/index.jsp" />
+		<view id="page-body" 				value="/WEB-INF/view/profile/profile.jsp" />
 	</template>
 	
 	

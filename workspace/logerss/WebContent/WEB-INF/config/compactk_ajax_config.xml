@@ -8,12 +8,11 @@ type="init-method"  을하면 init 서블릿 메서드 탈때  injection을해�
 type="service-method"  을하면 service 서블릿 메서드 탈때  injection을해준다.
  -->
 	<!-- class start-->
-	<class id="connectionCreator" classpath="loggerss.service.classs.db.ConnectionCreator"/>      
 	<class id="dbTerminal" classpath="khh.web.jsp.framework.compact.db.DBTerminalResovler">
 		<constructor type="init-method">
 			<class classpath="javax.servlet.ServletConfig" type="bind-parameter"/>
 			<class classpath="java.lang.String" value="/WEB-INF/config/dbterminal_config.xml"/>
-			<class extends="connectionCreator"/>
+			<class classpath="loggerss.service.classs.db.ConnectionCreator"/>      
 		</constructor>
 	</class>
 	
@@ -25,6 +24,15 @@ type="service-method"  을하면 service 서블릿 메서드 탈때  injection�
 			<constructor><class extends="dbTerminal"/></constructor>
 		</class>
 		<class id="sign_service" classpath="loggerss.service.Sign">
+			<constructor><class extends="dbTerminal"/></constructor>
+		</class>
+		<class id="log_service" classpath="loggerss.service.Log">
+			<constructor><class extends="dbTerminal"/></constructor>
+		</class>
+		<class id="api_service" classpath="loggerss.service.Api">
+			<constructor><class extends="dbTerminal"/></constructor>
+		</class>
+		<class id="user_service" classpath="loggerss.service.User">
 			<constructor><class extends="dbTerminal"/></constructor>
 		</class>
 		<!-- execute services -->
@@ -41,28 +49,71 @@ type="service-method"  을하면 service 서블릿 메서드 탈때  injection�
 			<class classpath="javax.servlet.http.HttpServletResponse" type="bind-parameter"/>
 		</rmethod>
 	</class>
-	<!-- views end-->
-	
-
-	<!--services start-->
-	<class id="infoController"  url="/ajax.*" classpath="khh.web.jsp.framework.compact.controller.URIDivisionService" type="service">
-		<method id="info" name="addObject">
-			<class classpath="java.lang.String" value="/ajax/gis"/>
-			<class extends="gis_service"/>
-		</method>
-		<method id="info" name="addObject">
-			<class classpath="java.lang.String" value="/ajax/info"/>
-			<class extends="info_service"/>
-		</method>
-		<method id="sign" name="addObject">
-			<class classpath="java.lang.String" value="/ajax/sign"/>
-			<class extends="sign_service"/>
+	<class id="javascriptView" classpath="khh.web.jsp.framework.compact.view.ForWardViewResovler" type="view" order="default">
+		<method id="setViewPath" name="setViewPath">
+			<class  classpath="java.lang.String" value="/WEB-INF/view/format/javascript.jsp"/>
 		</method>
 		<rmethod id="doRequest" name="doRequest" type="service-method">
 			<class classpath="javax.servlet.http.HttpServletRequest" type="bind-parameter"/>
 			<class classpath="javax.servlet.http.HttpServletResponse" type="bind-parameter"/>
 		</rmethod>
 	</class>
+	<!-- views end-->
+	
+
+	<!--services start-->
+	<class id="infoController"  url="/ajax.*" classpath="khh.web.jsp.framework.compact.controller.URIDivisionService" type="service">
+		<method name="putObject">
+			<class classpath="java.lang.String" value="/ajax/gis"/>
+			<class extends="gis_service"/>
+		</method>
+		<method name="putObject">
+			<class classpath="java.lang.String" value="/ajax/info"/>
+			<class extends="info_service"/>
+		</method>
+		<method name="putObject">
+			<class classpath="java.lang.String" value="/ajax/sign"/>
+			<class extends="sign_service"/>
+		</method>
+		<method name="putObject">
+			<class classpath="java.lang.String" value="/ajax/log"/>
+			<class extends="log_service"/>
+		</method>
+		<method name="putObject">
+			<class classpath="java.lang.String" value="/ajax/api"/>
+			<class extends="api_service"/>
+		</method>
+		<method name="putObject">
+			<class classpath="java.lang.String" value="/ajax/user"/>
+			<class extends="user_service"/>
+		</method>
+		<rmethod id="doRequest" name="doRequest" type="service-method">
+			<class classpath="javax.servlet.http.HttpServletRequest" type="bind-parameter"/>
+			<class classpath="javax.servlet.http.HttpServletResponse" type="bind-parameter"/>
+		</rmethod>
+	</class>
+	
+	<!-- AOP --><!-- public java.lang.String khh.web.jsp.framework.compact.controller.URIDivisionService.doRequest(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse) throws java.lang.Exception -->
+<!-- 	<class id="aopAfter" classpath="khh.web.jsp.framework.compact.aop.ResponseHeaderAOP" type="aop"  -->
+<!-- 	around="after" execution="^public .* khh.web.jsp.framework.compact.controller.URIDivisionService.*(.*)"  method="after" > -->
+<!-- 		<method  name="putHeader"> -->
+<!-- 			<class classpath="java.lang.String" value="Access-Control-Allow-Origin"/> -->
+<!-- 			<class classpath="java.lang.String" value="*"/> -->
+<!-- 		</method> -->
+<!-- 		<method  name="putHeader"> -->
+<!-- 			<class classpath="java.lang.String" value="Access-Control-Allow-Headers"/> -->
+<!-- 			<class classpath="java.lang.String" value="Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization,ache-control, content-type, pragma"/> -->
+<!-- 		</method> -->
+<!-- 		<method  name="putHeader"> -->
+<!-- 			<class classpath="java.lang.String" value="Access-Control-Allow-Methods"/> -->
+<!-- 			<class classpath="java.lang.String" value="POST, GET, OPTIONS, DELETE"/> -->
+<!-- 		</method> -->
+<!-- 		<method  name="putHeader"> -->
+<!-- 			<class classpath="java.lang.String" value="Access-Control-Max-Age"/> -->
+<!-- 			<class classpath="java.lang.String" value="3600"/> -->
+<!-- 		</method> -->
+<!-- 	</class> -->
+	
 	<!-- services end-->
 	
 </compact>

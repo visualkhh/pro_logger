@@ -3,27 +3,23 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="khh.property.util.PropertyUtil"%>
 <%@taglib prefix="fluid"  uri="http://visualkhh.com/fluid"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script src="/front-end/javascript/exif/exif-js-master/exif.js"></script>
 <script src="/front-end/javascript/visualkhh/device_util.js"></script>
 <script src="/front-end/javascript/visualkhh/googlemap_util.js"></script>
 <script src="/front-end/graphK/graphk_util.js"></script>
 <script src="/front-end/graphK/graphk_object.js"></script>
 <script src="/front-end/graphK/graphk.js"></script>
-<script type="text/javascript" src="https://maps.google.com/maps/api/js?v=3.exp&language=en_us"></script>
+<script type="text/javascript" src="https://maps.google.com/maps/api/js?v=3.exp"></script>
 <script type="text/javascript">
 
 // class..........
 function MapLog(){};
 MapLog.prototype = new Object();
 MapLog.prototype.id;
-MapLog.prototype.open="N"; //공개 비공개  기본 비공개
 MapLog.prototype.type='map';
 MapLog.prototype.chartType='linefill';
-MapLog.prototype.isSearch; // 서치대상인가 아닌가. 서치버튼누를때마다 false 되고 완료되면 트루된다. 
 MapLog.prototype.min_date;//14554165155 초기 
 MapLog.prototype.max_date;//14554165155 초기 
-
 MapLog.prototype.title; //$('#map-form-title').val(),
 MapLog.prototype.data;//:eval("["+$('#map-form-data').val()+"]"),
 MapLog.prototype.toggle=function(){
@@ -38,11 +34,11 @@ MapLog.prototype.chartData	= function(){return chartMapSpeedData(this.id);};
 MapLog.prototype.save		= function(){return save(this.id);};
 MapLog.prototype.edit 		= function(){return loadMapForm(this.id);};
 MapLog.prototype.remove	= function(){remove(this.id);};
-MapLog.prototype.add		= function(){var a = addLog(this.id); this.polyline.setMap(getMap()); return a;};
+MapLog.prototype.add		= function(){return addLog(this.id);};
 MapLog.prototype.insertData	= function(){return JavaScriptUtil.arrayToString(this.data);};		//DB에 저장히기전에 디코딩 컨버팅 역활한다
 MapLog.prototype.selectData	= function(getData){this.data=getData;};		// DB에서 가져온뒤 엔코딩 컨버팅 역활을한다.
 MapLog.prototype.setTime	= function(time){
-	if(this.min_date> time || time > this.max_date ){return};
+	if(this.graph==undefined || this.graph[0]==undefined || this.data==undefined || this.graph[0].data.getDataXMin()> time || time > this.graph[0].data.getDataXMax() ){return};
 	
 	
 	var btw = MathUtil.getBetweenSize($("#slider").data("slider").options.min, $("#slider").data("slider").options.max) //전체크기차
@@ -66,31 +62,24 @@ MapLog.prototype.setTime	= function(time){
 	this.point['dataIndex']= index;
 	return GmapUtil.createLatLng(Number(lat),Number(lng));
 }
-MapLog.prototype.init	= function(){
-}
 MapLog.prototype.finalize	= function(){
-	try{
-		$("#container-"+this.id).remove();
-		$("#log-list-item-"+this.id).remove();
-		if(this.point)
-			GmapUtil.removeMarker(getMap(),this.point);
-		this.polyline.setMap(null);
-	}catch(e){}
+	if(this.point)
+		GmapUtil.removeMarker(getMap(),this.point);
+	this.polyline.setMap(null);
+	this.markers = [];
+	$("#container-"+this.id).remove();
 };
 
 
 function DataLog(){};
 DataLog.prototype = new Object();
 DataLog.prototype.id;
-DataLog.prototype.open="N"; //공개 비공개  기본 비공개
 DataLog.prototype.type		= 'data';
 DataLog.prototype.chartType	= 'linefill',
-DataLog.prototype.isSearch; // 서치대상인가 아닌가. 서치버튼누를때마다 false 되고 완료되면 트루된다.
 DataLog.prototype.min_date;//14554165155 초기 
 DataLog.prototype.max_date;//14554165155 초기
 DataLog.prototype.title;//:$('#data-form-title').val(),
 DataLog.prototype.data;//:eval($('#data-form-data').val()),
-DataLog.prototype.chartData	= function(){return this.data;};
 DataLog.prototype.save		= function(){return save(this.id);};
 DataLog.prototype.remove	= function(){return remove(this.id);};
 DataLog.prototype.edit		= function(){return loadDataForm(this.id);};
@@ -101,10 +90,7 @@ DataLog.prototype.setTime	= function(time){
 	
 }
 DataLog.prototype.finalize 	= function(){
-	try{
-		$("#container-"+this.id).remove();
-		$("#log-list-item-"+this.id).remove();
-	}catch(e){}
+			$("#container-"+this.id).remove();
 }
 
 
@@ -113,10 +99,8 @@ DataLog.prototype.finalize 	= function(){
 function PhotoLog(){};
 PhotoLog.prototype = new Object();
 PhotoLog.prototype.id;
-PhotoLog.prototype.open="N"; //공개 비공개  기본 비공개
 PhotoLog.prototype.type				= 'photo';
 PhotoLog.prototype.chartType		= 'dot';
-PhotoLog.prototype.isSearch; // 서치대상인가 아닌가. 서치버튼누를때마다 false 되고 완료되면 트루된다.
 PhotoLog.prototype.min_date;//14554165155 초기 
 PhotoLog.prototype.max_date;//14554165155 초기
 PhotoLog.prototype.chartAxisYCount	= 0;
@@ -138,16 +122,12 @@ PhotoLog.prototype.remove = function(){
 PhotoLog.prototype.data;
 PhotoLog.prototype.chartData = function(){return chartPhotoData(this.id);};
 PhotoLog.prototype.edit = function(){ return	loadPhotoForm(this.id);};
-PhotoLog.prototype.add =  function(){
-	var a = addLog(this.id); 
-	for(var i=0;i<this.markers.length;i++)
-		this.markers[i].setMap(getMap());
-	return a;
-};
+PhotoLog.prototype.add =  function(){return addLog(this.id);};
 PhotoLog.prototype.insertData	= function(){return JavaScriptUtil.arrayToString(this.data);};
 PhotoLog.prototype.selectData	= function(getData){this.data=getData;};
 PhotoLog.prototype.setTime	= function(time){
-	if(this.min_date> time || time > this.max_date ){return};	
+	if(this.graph==undefined || this.graph[0]==undefined || this.data==undefined || this.graph[0].data.getDataXMin()> time || time > this.graph[0].data.getDataXMax() ){return};if(this.graph==undefined || this.graph[0]==undefined || this.graph[0].data.getDataXMin()> time || time > this.graph[0].data.getDataXMax() ){return};
+	
 	var btw = MathUtil.getBetweenSize($("#slider").data("slider").options.min, $("#slider").data("slider").options.max) //전체크기차
 	var point = MathUtil.getBetweenSize($("#slider").data("slider").options.min, time); //특정시간대 포인트
 	var per = MathUtil.getPercentByTot(btw,point);
@@ -177,23 +157,19 @@ PhotoLog.prototype.setTime	= function(time){
 	return GmapUtil.createLatLng(Number(lat),Number(lng));
 }
 PhotoLog.prototype.finalize = function(){
-	try{
-		$("#container-"+this.id).remove();
-		$("#log-list-item-"+this.id).remove();
-		if(this.point)
-			GmapUtil.removeMarker(getMap(),this.point);
-		for(var i=0;i<this.markers.length;i++)
-			this.markers[i].setMap(null);
-	}catch(e){}
+	if(this.point)
+		GmapUtil.removeMarker(getMap(),this.point);
+	for(var i=0;i<this.markers.length;i++)
+		this.markers[i].setMap(null);
+	this.markers = [];
+	$("#container-"+this.id).remove();
 }
 
 
 function MsgLog(){};
 MsgLog.prototype = new Object();
 MsgLog.prototype.id;
-MsgLog.prototype.open="N"; //공개 비공개  기본 비공개
 MsgLog.prototype.type			= 'msg';
-MsgLog.prototype.isSearch; // 서치대상인가 아닌가. 서치버튼누를때마다 false 되고 완료되면 트루된다.
 MsgLog.prototype.min_date;//14554165155 초기 
 MsgLog.prototype.max_date;//14554165155 초기
 MsgLog.prototype.chartType		= 'dot';
@@ -216,17 +192,13 @@ MsgLog.prototype.remove = function(){
 MsgLog.prototype.data;
 MsgLog.prototype.chartData = function(){return chartMsgData(this.id);};
 MsgLog.prototype.edit=function(){ return	loadMsgForm(this.id);};
-MsgLog.prototype.add=function(){
-	var a = addLog(this.id);
-	for(var i=0;i<this.markers.length;i++)
-		this.markers[i].setMap(getMap());
-	return a; 
-};
+MsgLog.prototype.add=function(){return addLog(this.id);};
 MsgLog.prototype.insertData	= function(){return JavaScriptUtil.arrayToString(this.data);};
 MsgLog.prototype.selectData	= function(getData){this.data=getData;};
 MsgLog.prototype.setTime	= function(time){
-	if(this.min_date> time || time > this.max_date ){return};	
-	//time = time - this.min_date;
+	if(this.graph==undefined || this.graph[0]==undefined || this.data==undefined || this.graph[0].data.getDataXMin()> time || time > this.graph[0].data.getDataXMax() ){return};
+	
+	var btw = MathUtil.getBetweenSize($("#slider").data("slider").options.min, $("#slider").data("slider").options.max) //전체크기차
 	var btw = MathUtil.getBetweenSize($("#slider").data("slider").options.min, $("#slider").data("slider").options.max) //전체크기차
 	var point = MathUtil.getBetweenSize($("#slider").data("slider").options.min, time); //특정시간대 포인트
 	var per = MathUtil.getPercentByTot(btw,point);
@@ -251,99 +223,34 @@ MsgLog.prototype.setTime	= function(time){
   	});
 	infowindow.open(map, this.point);
 	
-	this.point['dataIndex']= index; 
-// 	return GmapUtil.createLatLng(Number(lat),Number(lng));
+	this.point['dataIndex']= index;
+	return GmapUtil.createLatLng(Number(lat),Number(lng));
 }
 MsgLog.prototype.finalize=function(){
-	try{
-		$("#container-"+this.id).remove();
-		$("#log-list-item-"+this.id).remove();
-		if(this.point)
-			GmapUtil.removeMarker(getMap(),this.point);
-		for(var i=0;this.markers&&i<this.markers.length;i++)
-			this.markers[i].setMap(null);
-	}catch(e){}
+	if(this.point)
+		GmapUtil.removeMarker(getMap(),this.point);
+	for(var i=0;this.markers&&i<this.markers.length;i++)
+		this.markers[i].setMap(null);
+	this.markers = [];
+	$("#container-"+this.id).remove();
 };
 
 
 
 var map;
+var FROM_DATE;
+var TO_DATE;
 var log = new HashMap(); 
-log['getIsSearchMinDate'] = function(){
- 	var keys = this.getKeys();
- 	var array = new Array();
-	for (var i = 0; i < keys.length; i++) {
-		if(this.get(keys[i]).isSearch)
-		array.push(this.get(keys[i]).min_date);
-	}
-	return MathUtil.min(array);
-}
-log['getIsSearchMaxDate'] = function(){
- 	var keys = this.getKeys();
- 	var array = new Array();
-	for (var i = 0; i < keys.length; i++) {
-		if(this.get(keys[i]).isSearch)
-		array.push(this.get(keys[i]).max_date);
-	}
-	return MathUtil.max(array);
-}
 var logmeta = new HashMap(); 
 EventUtil.addOnloadEventListener(function(){
-	//map = getMap();
-	init();
+	settingTimeLine();
 	
-	$("#map-toggle").click(function(){
-		$("#googlemap").toggle();
-	});
-	
-	
-	$("#search").click(function(){
-		var selectedId = $('#log-list').selectpicker('val');
-		if(selectedId && selectedId.length>0){
-			$("#log-container").empty();
-		 	var keys = log.getKeys();
-		 	for (var i = 0; i < keys.length; i++) {
-		 		log.get(keys[i]).finalize();
-		 		log.get(keys[i]).isSearch=false;
-		 	}
-			for (var i = 0; i < selectedId.length; i++) {
-				select(selectedId[i]);
-			}
-			
-		}
-	});
-	
-	
-	
-	
-	<c:if test="${param.id ne null }">
-		select("${param.id}");
-	</c:if>
-	
-});
-
-
-function init(){ 
-	var param_user = {
-			"url":"/ajax/user",
-			"data" : 	{"MN":"getUser","u":"${param.u}"},
-			"async": false,
-			onSuccess : function(data){
-				for (var i = 0; i < data.length; i++) {
-					$("#user_name").text(data[i].NAME);
-				}
-			}
-			
-	}
-	request(param_user,"loading user infomation request..");
 	
 	var param_logtype = {
 			"url":"/ajax/log",
 			"data" : 	{"MN":"getLogType"},
 			"async": false,
 			onSuccess : function(data){
-				$("#addLog-container").empty()
-				$("#log-list").empty();
 				for (var i = 0; i < data.length; i++) {
 					logmeta.put(data[i].TYPE,data[i]);
 					var btn = $("<li><a href='#'><span class='"+data[i].ICON+"'></span> "+data[i].TYPE+"</a></li>");
@@ -351,142 +258,144 @@ function init(){
 						btn.click(function(e){ eval(fnc)(); });	
 					})(data[i].EXECUTEFNC);
 					$("#addLog-container").append(btn);
-					var logTypeE =  $("<optgroup id='log-list-"+data[i].TYPE+"'data-icon='"+data[i].ICON+"' label='"+data[i].TYPE+"'></optgroup>");
-					$("#log-list").append(logTypeE);
 				}
-				$('#log-list').selectpicker('refresh');
-
-
 			}
 		};
-	request(param_logtype,"loading log infomation request..",false);
+	request(param_logtype,"loading log infomation request..",false)
 	
 	var param_log = {
 			"url":"/ajax/log",
-			"data" : 	{"MN":"selectLog","u":"${param.u}"},
-			"async": false,
+			"data" : 	{"MN":"selectLog"},
 			onSuccess : function(data){
-				$("#log-list optgroup").empty()
 				for (var i = 0; i < data.length; i++) {
-					var obj = log.get(data[i].LOG_ID)||eval("new "+data[i].PROTOTYPE+"()");
+					var obj;
+					eval("obj = new "+data[i].PROTOTYPE+"()");
 					obj.id 		= data[i].LOG_ID;
 					obj.title	= data[i].TITLE;
 					obj.type 	= data[i].TYPE;
-					obj.open 	= data[i].OPEN;
 					obj.min_date= Number(data[i].MIN_DATE);
 					obj.max_date= Number(data[i].MAX_DATE);
+					obj.type 	= data[i].TYPE;
 					log.put(data[i].LOG_ID,obj);
-					
-// 					var logE = $("#log-list-"+data[i].TYPE).append("<option id='log-list-item-"+data[i].LOG_ID+"' value='"+data[i].LOG_ID+"' data-subtext='("+obj.min_date+"~"+obj.max_date+")'>"+(data[i].TITLE)+"</option>");
-					var logE = $("#log-list-"+data[i].TYPE).append("<option id='log-list-item-"+data[i].LOG_ID+"' value='"+data[i].LOG_ID+"'>"+(data[i].TITLE)+"</option>");
-					$("#log-list").append(logE);
+					obj.add();
+					//addLog(data[i].LOG_ID);
 				}
-				$('#log-list').selectpicker('refresh');
 			}
 		};
-	request(param_log,"loading log infomation request..",false);
-	
-}
+	request(param_log,"loading log infomation request..")
+});
 
-<c:if test="${ROLEK.USER_SEQ==param.u}">
+function save(id){
 	
-	function saveTitle(id){
+	if(FROM_DATE==undefined || TO_DATE==undefined){ alert("You must have a selected date.!<br/>from ~ to!!");return;}
+	var from_date_param = DateUtil.getDate("yyyy:MM:dd HH:mm:ss",FROM_DATE)
+	var to_date_param = DateUtil.getDate("yyyy:MM:dd HH:mm:ss",TO_DATE)
+	
+	
+	confirm("title:"+log.get(id).title+" (type:"+log.get(id).type+") <br/> "+from_date_param+" ~ "+to_date_param+"<br/><h4>Log SAVE?</h4>",function(){
 		var atData = log.get(id);
 		var param = {
 				"url":"/ajax/log",
 				"data" :{
 						"MN":"saveLog",
+						"from_date":DateUtil.getDate("yyyy:MM:dd HH:mm:ss",FROM_DATE),
+						"to_date":DateUtil.getDate("yyyy:MM:dd HH:mm:ss",TO_DATE),
 						"log_seq":logmeta.get(atData.type).LOG_SEQ,
 						"log_id":id,
 						"title":atData.title,
-						"open":atData.open,
+						"data":atData.insertData()
 					},
 				onSuccess : function(data){
-					for (var i = 0; i < data.length; i++) {
-						var openIcon = $("#open-icon-"+data[i].LOG_ID);
-						openIcon.removeClass("fa-eye fa-eye-slash");
-						if(data[i].OPEN=="Y"){
-							openIcon.addClass("fa-eye");
-						}else if(data[i].OPEN=="N"){
-							openIcon.addClass("fa-eye-slash");
-						}
-					}
-					toastr.success("save Success!");
+					alert("save Success!");
 				}
 			};
 		request(param,"save log ...")
-	}
-	function save(id){
-		confirm(log.get(id).title+" ("+log.get(id).type+")<br/><h4>Log SAVE?</h4>",function(){
-			var atData = log.get(id);
-			var param = {
-					"url":"/ajax/log",
-					"data" :{
-							"MN":"saveLogData",
-							"log_seq":logmeta.get(atData.type).LOG_SEQ,
-							"log_id":id,
-							"title":atData.title,
-							"open":atData.open,
-							"data":atData.insertData()
-						},
-					onSuccess : function(data){
-						toastr.success("save Success!");
-					}
-				};
-			request(param,"save log ...")
-		});
-	}
-	function remove(id){
-		
-		confirm(log.get(id).title+" ("+log.get(id).type+")<br/><h4 style='color:red'>Log DELETE?</h4>",function(){
-			var atData = log.get(id);
-			var param = {
-					"url":"/ajax/log",
-					"data" :{
-							"MN":"deleteLog",
-							"log_seq":logmeta.get(atData.type).LOG_SEQ,
-							"log_id":id
-						},
-					onSuccess : function(data){
-						toastr.success("remove Success!");
-						log.get(id).finalize();
-						log.remove(id);
-					}
-				};
-			request(param,"remove log ...")
-		});
+	});
+}
+function remove(id){
+	if(FROM_DATE==undefined || TO_DATE==undefined){ alert("You must have a selected date.!<br/>from ~ to!!");return;}
+	var from_date_param = DateUtil.getDate("yyyy:MM:dd HH:mm:ss",FROM_DATE)
+	var to_date_param = DateUtil.getDate("yyyy:MM:dd HH:mm:ss",TO_DATE)
 	
-	}
-</c:if>
-
-
-function select(id){
-	var atData = log.get(id);
-	var param = {
-			"url":"/ajax/log",
-			"data" :{
-				"MN":"selectLogData",
-				"log_seq":logmeta.get(atData.type).LOG_SEQ,
-				"log_id":atData.id,
-				"u":"${param.u}"
-			},
-			onSuccess :(function(pData){
-				return function(data){
-					var loadData = new Array();
-					for (var i = 0; i < data.length; i++) {
-						loadData.push(ConvertingUtil.JsonStringToObject(data[i].LOG_DATA));
-					}
-					pData.selectData(loadData);
-					pData.add();
+	confirm("title:"+log.get(id).title+" (type:"+log.get(id).type+") <br/> "+from_date_param+" ~ "+to_date_param+"<br/><h4>Log DELETE?</h4>",function(){
+		var atData = log.get(id);
+		var param = {
+				"url":"/ajax/log",
+				"data" :{
+						"MN":"deleteLog",
+						"from_date":DateUtil.getDate("yyyy:MM:dd HH:mm:ss",FROM_DATE),
+						"to_date":DateUtil.getDate("yyyy:MM:dd HH:mm:ss",TO_DATE),
+						"log_seq":logmeta.get(atData.type).LOG_SEQ,
+						"log_id":id
+					},
+				onSuccess : function(data){
+					alert("remove Success!");
+					log.remove(id);
 				}
-			})(atData)
-		};
-	atData.isSearch=true;
- 	request(param,"loading log ["+atData.title+"] request..")
+			};
+		request(param,"remove log ...")
+	});
+
+}
+
+function select(){
+	if(FROM_DATE==undefined || TO_DATE==undefined){ alert("You must have a selected date.!<br/>from ~ to!!");return;}
+	
+	
+	if(FROM_DATE.getTime()>=TO_DATE.getTime()){
+		alert("The start date is greater than the ending date.!!");
+		return;
+	}
+	
+	
+	
+	
+	
+	var from_date_param = DateUtil.getDate("yyyy:MM:dd HH:mm:ss",FROM_DATE)
+	var to_date_param = DateUtil.getDate("yyyy:MM:dd HH:mm:ss",TO_DATE)
+// 	confirm("you choice:<br/>"+from_date_param+" ~ "+to_date_param+"<br/><h4>Log load?</h4>",function(){
+// 	})
+
+
+	var keys = log.getKeys();
+	for (var i = 0; i < keys.length; i++) {
+		var atData = log.get(keys[i]);
+		var param = {
+				"url":"/ajax/log",
+				"data" :{
+					"MN":"selectLogData",
+					"from_date":DateUtil.getDate("yyyy:MM:dd HH:mm:ss",FROM_DATE),
+					"to_date":DateUtil.getDate("yyyy:MM:dd HH:mm:ss",TO_DATE),
+					"log_seq":logmeta.get(atData.type).LOG_SEQ,
+					"log_id":atData.id
+				},
+				onSuccess :(function(pData){
+					return function(data){
+// 						console.log(pData);
+// 						console.log(data);
+// 						console.log("----------");
+						var loadData = new Array();
+						for (var i = 0; i < data.length; i++) {
+							loadData.push(ConvertingUtil.JsonStringToObject(data[i].LOG_DATA));
+						}
+						pData.selectData(loadData);
+						try{
+							pData.finalize();
+						}catch(err){};
+						pData.add();
+					}
+				})(atData)
+			};
+	 	request(param,"loading log ["+i+"] request..")
+// 	 	break;
+	}
+
+
 
 }
 
 function loadMapForm(id){
+	if(FROM_DATE==undefined || TO_DATE==undefined){ alert("You must have a selected date.!<br/>from ~ to!!");return;}
 	var param = new Object(); 
 	id = id||JavaScriptUtil.getUniqueKey()
 	param['id'] = id;
@@ -499,13 +408,11 @@ function loadMapForm(id){
 				btn:[{title:"accept",callback:
 					function(){
 						try{
-							var o = log.get(id)||new MapLog();
+							var o = new MapLog();
 							o.id	= id;
-							o.finalize();
 							o.title	= $('#map-form-title').val();
 							o.data	= eval($('#map-form-data').val())
 							log.put(id,o);
-							o.isSearch=true;
 							o.add();
 							popupClose()
 						}catch(err){
@@ -530,6 +437,7 @@ function loadMapForm(id){
 
 
 function loadDataForm(id){
+	if(FROM_DATE==undefined || TO_DATE==undefined){ alert("You must have a selected date.!<br/>from ~ to!!");return;}
 	var param = new Object(); 
 	id = id||JavaScriptUtil.getUniqueKey()
 	param['id'] = id;
@@ -544,12 +452,11 @@ function loadDataForm(id){
 					function(){
 					
 						try{
-							var o 	= log.get(id)||new DataLog();
+							var o 	= new DataLog();
 							o.id	= id;
 							o.title	= $('#data-form-title').val();
 							o.data	= eval($('#data-form-data').val());
 							log.put(id,o);
-							o.isSearch=true;
 							o.add();
 							popupClose();
 						}catch(err){
@@ -573,6 +480,7 @@ function loadDataForm(id){
 
 
 function loadPhotoForm(id){
+	if(FROM_DATE==undefined || TO_DATE==undefined){ alert("You must have a selected date.!<br/>from ~ to!!");return;}
 	var param = new Object(); 
 	id = id||JavaScriptUtil.getUniqueKey()
 	param['id'] = id;
@@ -586,7 +494,7 @@ function loadPhotoForm(id){
 				btn:[{title:"accept",callback:
 					function(){
 						try{
-							var o = log.get(id)||new PhotoLog();
+							var o = new PhotoLog();
 							o.id=id;
 							o.title=$('#photo-form-title').val();
 							o.data=(function(){
@@ -602,7 +510,6 @@ function loadPhotoForm(id){
 										return array;
 									})();
 							log.put(id,o);
-							o.isSearch=true;
 							o.add();
 							popupClose()
 						}catch(err){
@@ -628,6 +535,7 @@ function loadPhotoForm(id){
 
 
 function loadMsgForm(id){
+	if(FROM_DATE==undefined || TO_DATE==undefined){ alert("You must have a selected date.!<br/>from ~ to!!");return;}
 	var param = new Object(); 
 	id = id||JavaScriptUtil.getUniqueKey()
 	param['id'] = id;
@@ -645,7 +553,7 @@ function loadMsgForm(id){
 				btn:[{title:"accept",callback:
 					function(){
 						try{
-							var o = log.get(id)||new MsgLog();
+							var o = new MsgLog();
 							o.id = id;
 							o.title=$('#msg-form-title').val();
 							o.data=(function(){
@@ -720,7 +628,6 @@ function chartPhotoData(id){
 		//delete dataObj[i]['src'];
 	}
 	markers['visible']=true;
- 	data['markers'] =[];
  	data['markers'] = markers;
  	GmapUtil.fitBoundsMarkerArry(map,markers);
 	return returnDataObj;
@@ -765,7 +672,6 @@ function chartMsgData(id){
 		//delete dataObj[i]['src'];
 	}
 	markers['visible']=true;
-	data['markers'] = [];
  	data['markers'] = markers;
  	GmapUtil.fitBoundsMarkerArry(map,markers);
 	return returnDataObj;
@@ -807,7 +713,7 @@ function chartMapSpeedData(id){
 			}
 			//speed_data.push({"x":obj['date'], "y":tt});
 			if(!dataObj[i]['speed'])	//speed 비어있는곳이 있으면. 넣어준다.
-				dataObj[i]['speed'] = isNaN(tt)?0:tt.toFixed(2);
+				dataObj[i]['speed'] = tt.toFixed(2);
 		}
 		//delete dataObj[i]['latlng'];
 		
@@ -844,54 +750,94 @@ function chartMapSpeedData(id){
 }
 
 
-function transDate(dataStr){
-// 	var yyyyMMddHHmmss =  data.split(" ");
-// 	var yyyyMMdd = yyyyMMddHHmmss[0];
-// 	var HHmmss = yyyyMMddHHmmss[1];
+function transDate(data){
+	var yyyyMMddHHmmss =  data.split(" ");
+	var yyyyMMdd = yyyyMMddHHmmss[0];
+	var HHmmss = yyyyMMddHHmmss[1];
 	
-// 	yyyyMMdd = yyyyMMdd.split(":");
-// 	var yyyy = yyyyMMdd[0]; 
-// 	var MM = Number(yyyyMMdd[1])-1; 
-// 	var dd = yyyyMMdd[2];
+	yyyyMMdd = yyyyMMdd.split(":");
+	var yyyy = yyyyMMdd[0]; 
+	var MM = Number(yyyyMMdd[1])-1; 
+	var dd = yyyyMMdd[2];
 	
-// 	HHmmss = HHmmss.split(":");
-// 	var HH = HHmmss[0]; 
-// 	var mm = HHmmss[1]; 
-// 	var ss = HHmmss[2];
-// 	var d = new Date(yyyy, MM, dd, HH, mm, ss, 0);
-
-
-//"20150425121133".substring(0,4) + " " + "20150425121133".substring(4,6) + " " + "20150425121133".substring(6,8) + " " + "20150425121133".substring(8,10)  + " " + "20150425121133".substring(10,12)  + " " + "20150425121133".substring(12,14)
-	var d = new Date(dataStr.substring(0,4), dataStr.substring(4,6), dataStr.substring(6,8), dataStr.substring(8,10), dataStr.substring(10,12), dataStr.substring(12,14), 0);
+	HHmmss = HHmmss.split(":");
+	var HH = HHmmss[0]; 
+	var mm = HHmmss[1]; 
+	var ss = HHmmss[2];
+	var d = new Date(yyyy, MM, dd, HH, mm, ss, 0);
 	return d;
 }
 
 function transTypeChartData(data){
 	var dataMap = new HashMap();
-	var dateArray = new Array();
 	for (var i = 0; i < data.length; i++) {
 		var obj = data[i];
-		var datems = transDate(obj['date']).getTime();
-		dateArray.push(datems);
 		for (var property in obj) { //property
 			if(property=='date'){continue;}
 			if(dataMap.get(property)==undefined){dataMap.put(property,new Array())}
 			
 			var addObj = new Object();
-			addObj['x']=datems;
+			addObj['x']=transDate(obj['date']).getTime();
 			if(isNaN(obj[property]))
-			addObj['y']= 0;//obj[property];
+			addObj['y']= obj[property];
 			else
 			addObj['y']= Number(obj[property]);
 				
 			dataMap.get(property).push(addObj);
 	    }	
 	}
-	dataMap['min_date'] = MathUtil.min(dateArray);
-	dataMap['max_date'] = MathUtil.max(dateArray);
 	return dataMap;
 }
 
+
+
+function settingTimeLine(){
+	var from=$('#from-date').datetimepicker({
+		format: "yyyy:mm:dd hh:ii",
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+        showMeridian: 0,
+        minuteStep: 1
+//         pickerPosition: "bottom-"
+    });
+	var to=$('#to-date').datetimepicker({
+		format: "yyyy:mm:dd hh:ii",
+        weekStart: 1,
+        todayBtn:  1,
+		autoclose: 1,
+		todayHighlight: 1,
+		startView: 2,
+		forceParse: 0,
+        showMeridian: 0,
+        minuteStep: 1,
+        pickerPosition: "bottom-left"
+    });
+	
+	from.on('changeDate', function(ev){
+		FROM_DATE = ev.date;
+		FROM_DATE.setSeconds(0);
+		FROM_DATE.setMilliseconds(0);
+		FROM_DATE.setHours(FROM_DATE.getHours() + FROM_DATE.getTimezoneOffset()/60)
+		var strDate = DateUtil.getDate("yyyy:MM:dd HH:mm",FROM_DATE);
+		$(this).text(strDate);
+// 		console.log(FROM_DATE + "   "+strDate);
+		changeDate(FROM_DATE, TO_DATE);
+	});
+	to.on('changeDate', function(ev){
+		TO_DATE = ev.date;
+		TO_DATE.setSeconds(0);
+		TO_DATE.setMilliseconds(0);
+		TO_DATE.setHours(TO_DATE.getHours() + TO_DATE.getTimezoneOffset()/60)
+		var strDate = DateUtil.getDate("yyyy:MM:dd HH:mm",TO_DATE);
+		$(this).text(strDate);
+// 		console.log(to_date + "   "+strDate);
+		changeDate(FROM_DATE, TO_DATE);
+	});
+}
 
 
 function addLog(id){
@@ -917,14 +863,9 @@ function addLog(id){
 		var edit_id = "edit-"+id;
 		var remove_id = "remove-"+id;
 		var graph_id = "graph-"+id;
-// 		var scope_id = "scope-"+id;
-		var public_id = "public-"+id;
-		var private_id = "private-"+id;
-		var open_icon_id = "open-icon-"+id;
 		var save_id = "save-"+id;
+		var scope_id = "scope-"+id;
 		var body_id = "body-"+id;
-		var footer_id = "footer-"+id;
-		var slider_id = "slider-"+id;
 		var h="";
 		h+='<div id="'+container_id+'" class="panel panel-default" style="margin-bottom:10px;">';
 		h+='	<div class="panel-heading" style="padding:3px;">';
@@ -933,81 +874,64 @@ function addLog(id){
 		h+='		  			<span class="input-group-addon"  id="sizing-addon3"><span class="fa '+logmeta.get(data['type']).ICON+' aria-hidden="true"></span></span>';
 		h+='		  			<input id="'+title_id+'" readonly type="text" class="form-control" placeholder="title" aria-describedby="sizing-addon3" value="'+data['title']+'"/>';
 		h+='						<span class="input-group-btn" style="padding-left:10px;">';
-		
-		
-        <c:if test="${ROLEK.USER_SEQ==param.u}">
-		h+='						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border-top-left-radius:4px;border-bottom-left-radius:4px;"  aria-haspopup="true" aria-expanded="false"><span id="'+open_icon_id+'"class="fa fa-eye'+(data.open=="N"?"-slash":"")+'"></span></button>';
-        h+='						<ul class="dropdown-menu dropdown-menu-right">';
-		h+='							<li id="'+public_id+'"><a id="map" href="#"><span class="fa fa-eye"></span> public</a></li>';
-		h+='							<li id="'+private_id+'"><a id="map" href="#"><span class="fa fa-eye-slash "></span> private</a></li>';
-        h+='						</ul>';
-// 		h+='							<button id="'+scope_id+'" class="btn btn-default" style="border-top-left-radius:4px;border-bottom-left-radius:4px;" type="button"><span class="fa fa-arrows-h" aria-hidden="true"></span></span></button>';
-		h+='							<button id="'+save_id+'" class="btn btn-default" type="button"><span class="fa fa-floppy-o" aria-hidden="true"></span></span></button>';
-		h+='							<button id="'+edit_id+'" class="btn btn-default" style="border-top-right-radius:4px;border-bottom-right-radius:4px;" type="button"><span class="fa fa-pencil-square-o" aria-hidden="true"></span></span></button>';
-		h+='							<button id="'+remove_id+'" class="btn btn-default" style="border-top-left-radius:4px;border-bottom-left-radius:4px;" type="button"><span class="fa fa-times" aria-hidden="true"></span></button>';
-		</c:if>
-		h+='							<button id="'+toggle_id+'" class="btn btn-default"  type="button"><span class="fa fa-bars" aria-hidden="true"></span></span></button>';
+		h+='							<button id="'+scope_id+'" class="btn btn-default" style="border-top-left-radius:4px;border-bottom-left-radius:4px;" type="button"><span class="fa fa-arrows-h" aria-hidden="true"></span></span></button>';
+		if(dataObj){//데이터있을때만 
+			h+='							<button id="'+save_id+'" class="btn btn-default" style="border-top-left-radius:4px;border-bottom-left-radius:4px;" type="button"><span class="fa fa-floppy-o" aria-hidden="true"></span></span></button>';
+			h+='							<button id="'+edit_id+'" class="btn btn-default" style="border-top-right-radius:4px;border-bottom-right-radius:4px;" type="button"><span class="fa fa-pencil-square-o" aria-hidden="true"></span></span></button>';
+			h+='							<button id="'+toggle_id+'" class="btn btn-default" style="border-top-left-radius:4px;border-bottom-left-radius:4px;" type="button"><span class="fa fa-bars" aria-hidden="true"></span></span></button>';
+			h+='							<button id="'+remove_id+'" class="btn btn-default"  type="button"><span class="fa fa-times" aria-hidden="true"></span></button>';
+		}
 		h+='						</span>';
 		h+='				</div>';
 		h+='	</h3>';
 		h+='	</div>';
 		h+='	<div id="'+body_id+'" class="panel-body" style="padding:0px;">';
-		h+='	</div>';
-		h+='	<div id="'+footer_id+'" class="panel-footer">';
-		h+='	 <div class="slider slider-horizontal"  style="width: 100%" id="'+slider_id+'"></div>';
-		h+='	</div>';
 		//h+='		<canvas id="'+graph_id+'"  style="width:100%; height:100px;"></canvas>';
+		h+='	</div>';
 		h+='</div>';
 		
 		var newLog=$(h);	
 		
 		
-		newLog.find("#"+public_id).click(function(){
-			data['open'] = "Y";
-			saveTitle(id);
-		});
-		newLog.find("#"+private_id).click(function(){
-			data['open'] = "N";
-			saveTitle(id);
-		});
 
 		newLog.find("#"+save_id).click(function(){
 			if(data['save'])
 				data['save']();
 		});
-		
-// 		newLog.find("#"+scope_id).click(function(){
-// 			var at = log.get(id);
-// 			///////slider
-// 			 var option = {
-// 			    		"min":at['min_date'],
-// 			    		"max":at['max_date'],
-// 			    		"value":0,
-// 			    		"tooltip":"always",
-// 			    		formatter: function(value) {
-// 			    			var d = new Date(value);
-// 			    			return DateUtil.getDate("yyyy:MM:dd HH:mm:ss",d);
-// 			    		}
-// 			    };
-// 		    $('#slider').slider('destroy')
-// 		    $('#slider').slider(option);
-// 		    $('#slider').on('slide',function(ev){
-// 		    	var keys = log.getKeys();
-// // 		    	var oldZoom = GmapUtil.getZoom(getMap());
-// 	    		var rg = at.setTime(ev.value);
-// 	    		GmapUtil.move(getMap(),rg.lat(),rg.lng());
-// 		    	for (var z = 0; at.graph && z < at.graph.length; z++) {
-// 		    		at.graph[z].setXLine(ev.value);
-// 		    	}
-// // 		    	GmapUtil.fitBounds(getMap(),gpss);
-// // 		    	if(oldZoom!=GmapUtil.getZoom(getMap()))
-// // 		    	GmapUtil.setZoom(getMap(),oldZoom);
-// 		    });
-// 		});
 
+		newLog.find("#"+scope_id).click(function(){
+			var at = log.get(id);
+			var from_date;
+			var to_date;
+			if(at.data && at.data.length>0){
+				var atData = at.graph;
+				var valArr = new Array();
+				for (var i = 0; i < atData.length; i++) {
+					valArr.push(atData[i].data.getDataXMin());
+					valArr.push(atData[i].data.getDataXMax());
+				}
+				from_date = new Date(MathUtil.min(valArr));
+				to_date = new Date(MathUtil.max(valArr));
+			}else{
+				from_date = new Date(at.min_date);
+				to_date = new Date(at.max_date);
+			}
+			
+			
+			$('#from-date').datetimepicker('update', from_date);
+			$('#to-date').datetimepicker('update', to_date);
+			FROM_DATE = from_date;
+			TO_DATE = to_date;
+			var fromStr = DateUtil.getDate("yyyy:MM:dd HH:mm",from_date);
+			$("#from-date").text(fromStr);
+			var toStr = DateUtil.getDate("yyyy:MM:dd HH:mm",to_date);
+			$("#to-date").text(toStr);
+			changeDate(from_date, to_date);
+			
+			//data['prah']
+		});
 		newLog.find("#"+toggle_id).click(function(){
 			newLog.find("#"+body_id).toggle();
-			newLog.find("#"+footer_id).toggle();
 			if(data['toggle'])
 				data['toggle']();
 		});
@@ -1025,151 +949,84 @@ function addLog(id){
 		
 		
 		
-		
-		
-		
 	 	var graphArry = new Array();
-		var chart_data 	= new Array();
-		var dataMap 	= transTypeChartData(dataObj);
-		data['min_date'] = dataMap['min_date'];
-		data['max_date'] = dataMap['max_date'];
-		
-	 	var keys = dataMap.getKeys();
-		for (var i = 0; i < keys.length; i++) {
+		if(dataObj){ //데이터 있어야지 뿌리지.
+			var chart_data 	= new Array();
+			var dataMap 	= transTypeChartData(dataObj);
+		 	var keys = dataMap.getKeys();
+			for (var i = 0; i < keys.length; i++) {
 				var atKey = keys[i];
 				
-			//ignore
-			if(atKey=="latlng"){//위도경도는 그릴수가없다.   
-				continue;
+				//ignore
+				if(atKey=="latlng"){//위도경도는 그릴수가없다.   
+					continue;
+				}
+				var atData = dataMap.get(atKey);
+				var canvas = document.createElement("canvas");
+				canvas.id = graph_id+"_"+atKey;
+				var jCanvas = $(canvas);
+				jCanvas.css("width","100%");
+				jCanvas.css("height","120px");
+			 	//graphk
+				var graph = new GraphK(canvas);
+				graph.contentTitle = atKey;
+				graph.chartDataVisible 		= false;
+				graph.chartAxisScaleVisible = false;
+				//graph.onMouseTraking();
+				//graph.onDrag();
+				graph.setMargin(10,25,10,0); //t, r, b, l 
+				graph.setPadding(1,1,1,1);
+				graph.chartAxisXDataMinMarginPercent = 5;
+				graph.chartAxisXDataMaxMarginPercent = 5;
+				graph.chartAxisYDataMinMarginPercent = 5;
+				graph.chartAxisYDataMaxMarginPercent = 5;
+				graph.chartAxisXCount = data.chartAxisXCount==undefined?5:data.chartAxisXCount;
+				graph.chartAxisYCount = data.chartAxisYCount==undefined?4:data.chartAxisYCount;
+				graph.chartAxisXFnc = function(data,index){
+					var date = new Date(Number(data));
+					return DateUtil.getDate("yyyy:MM:dd HH:mm:ss",date); 
+// 					return DateUtil.getDate("HH:mm:ss",date); 
+				}
+				
+				//dataset
+				var graphData = new GraphDataK("data", atData);
+				graphData.setType(data['chartType']);
+				graphData.setWidth(10);
+				graphData.setFillStyle(GraphKUtil.getRandomColor());
+				graphData.setStrokeStyle(GraphKUtil.getRandomColor());
+				graphData.setFillStyle(GraphKUtil.getRandomColor());
+				 
+				var graphDataKSet = new GraphDataKSet();
+				graphDataKSet.push(graphData);
+				
+				graph.setData(graphDataKSet);
+				graph.canvas.width = jCanvas.width();
+				graph.canvas.height = jCanvas.height();
+				
+				newLog.find("#"+body_id).append(jCanvas);
+				graphArry.push(graph);
 			}
-			var atData = dataMap.get(atKey);
+			
+		}else{//데이터 없으면 그냥 하나 넣어라.-_- 없다는거 표시.
 			var canvas = document.createElement("canvas");
-			canvas.id = graph_id+"_"+atKey;
 			var jCanvas = $(canvas);
 			jCanvas.css("width","100%");
 			jCanvas.css("height","120px");
-		 	//graphk
 			var graph = new GraphK(canvas);
-			graph.contentTitle = atKey;
-			graph.chartDataVisible 		= false;
-			graph.chartAxisScaleVisible = false;
-			graph.setMargin(10,25,10,0); //t, r, b, l 
-			graph.setPadding(1,1,1,1);
-			graph.chartAxisXDataMinMarginPercent = 5;
-			graph.chartAxisXDataMaxMarginPercent = 5;
-			graph.chartAxisYDataMinMarginPercent = 5;
-			graph.chartAxisYDataMaxMarginPercent = 5;
-			graph.chartAxisXCount = data.chartAxisXCount==undefined?5:data.chartAxisXCount;
-			graph.chartAxisYCount = data.chartAxisYCount==undefined?4:data.chartAxisYCount;
-			graph.chartAxisXFnc = function(data,index){
-				var date = new Date(Number(data));
-// 				return DateUtil.getDate("yyyy:MM:dd HH:mm:ss",date); 
-				return DateUtil.getDate("HH:mm:ss",date); 
-			}
-				
-			//dataset
-			var graphData = new GraphDataK("data", atData);
-			graphData.setType(data['chartType']);
-			graphData.setWidth(10);
-			graphData.setFillStyle(GraphKUtil.getRandomColor());
-			graphData.setStrokeStyle(GraphKUtil.getRandomColor());
-			graphData.setFillStyle(GraphKUtil.getRandomColor());
-			 
-			var graphDataKSet = new GraphDataKSet();
-			graphDataKSet.push(graphData);
-			
-			graph.setData(graphDataKSet);
-			graph.canvas.width = jCanvas.width();
-			graph.canvas.height = jCanvas.height();
-			
+			graph.contentTitle = data.title;
 			newLog.find("#"+body_id).append(jCanvas);
 			graphArry.push(graph);
-			
-			
-			
-			
-			
-			
-			jCanvas.click(function(){
-				var at = log.get(id);
-				///////slider
-				 var option = {
-				    		"min":at['min_date'],
-				    		"max":at['max_date'],
-				    		"value":0,
-				    		"tooltip":"always",
-				    		formatter: function(value) {
-				    			var d = new Date(value);
-				    			return DateUtil.getDate("yyyy:MM:dd HH:mm:ss",d);
-				    		}
-				    };
-			    $('#slider').slider('destroy')
-			    $('#slider').slider(option);
-			    $('#slider').on('slide',function(ev){
-			    	var keys = log.getKeys();
-//	 		    	var oldZoom = GmapUtil.getZoom(getMap());
-		    		var rg = at.setTime(ev.value);
-		    		if(rg)
-		    		GmapUtil.move(getMap(),rg.lat(),rg.lng());
-			    	for (var z = 0; at.graph && z < at.graph.length; z++) {
-			    		at.graph[z].setXLine(ev.value);
-			    	}
-//	 		    	GmapUtil.fitBounds(getMap(),gpss);
-//	 		    	if(oldZoom!=GmapUtil.getZoom(getMap()))
-//	 		    	GmapUtil.setZoom(getMap(),oldZoom);
-			    });
-			});
 		}
 			
-		data.finalize();
-		
-		//////slider
-		 var option = {
-		    		"min":data['min_date'],
-		    		"max":data['max_date'],
-		    		"value":[data['min_date'],data['max_date']],
-		    		"tooltip":"hide",
-		    		formatter: function(value) {
-		    			var fd = new Date(value[0]);
-		    			var td = new Date(value[1]);
-		    			return DateUtil.getDate("HH:mm:ss",fd)+"~"+DateUtil.getDate("HH:mm:ss",td);
-		    		}
-		};
-		newLog.find("#"+slider_id).slider(option);
-		newLog.find("#"+slider_id).on('slide',function(ev){
-			var at = log.get(id);
-	    	for (var z = 0; at.graph && z < at.graph.length; z++) {
-	    		at.graph[z].chartAxisXDataMin      = ev.value[0];
-	    		at.graph[z].chartAxisXDataMax      = ev.value[1];
-	    		at.graph[z].rendering();
-// 	    		at.graph[z].setXLines(ev.value);
-	    	}
-	    });
-		 
-		
-		
-		
+		$("#"+container_id).remove();
 		$("#log-container").append(newLog);
-		
-		
-		var keys = log.getKeys();
-		for(var i=0 ; i < keys.length ; i ++){
-			$("#log-list-item-"+log.get(keys[i]).id).remove();
-// 			var logE = $("#log-list-"+log.get(keys[i]).type).append("<option id='log-list-item-"+log.get(keys[i]).id+"' value='"+log.get(keys[i]).id+"' data-subtext='("+DateUtil.getDate('yyyy:MM:dd HH:mm:ss',log.get(keys[i]).min_date)+"~"+DateUtil.getDate('yyyy:MM:dd HH:mm:ss',log.get(keys[i]).max_date)+")'>"+log.get(keys[i]).title+"</option>");
-			var logE = $("#log-list-"+log.get(keys[i]).type).append("<option id='log-list-item-"+log.get(keys[i]).id+"' value='"+log.get(keys[i]).id+"'>"+log.get(keys[i]).title+"</option>");
-			$("#log-list").append(logE);
-		}
-		$('#log-list').selectpicker('refresh');
-		
-		
-		
-		
 		for (var i = 0; i < graphArry.length; i++) {
 			var gc = graphArry[i];
 			gc.rendering();
 			//gc.onMouseTraking();   
 			gc.onDrag();
 		}
+		
 		$(window).resize(function(){
 			for (var i = 0; i < graphArry.length; i++) {
 				var gc = graphArry[i];
@@ -1178,11 +1035,18 @@ function addLog(id){
 		});
 		
 		data['graph'] = graphArry;
+			
+
 	}catch(err){
 		console.log(err);
 		throw err;
 	}
+	
+	
+	
 	return true;
+	
+	
 }
 function getMap(){
 	if(!map){
@@ -1204,89 +1068,97 @@ function getMap(){
 
 
 
+function changeDate(from_date, to_date){
+	
+	if(from_date==undefined || to_date==undefined){return;}
+	
+// 	console.log("changeDate f: "+  from_date + "   "+DateUtil.getDate("yyyy.MM.dd(HH:mm)",from_date));
+// 	console.log("changeDate t: "+  to_date + "   "+DateUtil.getDate("yyyy.MM.dd(HH:mm)",to_date));
+    var option = {
+    		"min":from_date.getTime(),
+    		"max":to_date.getTime(),
+    		"value":0,
+    		"tooltip":"always",
+    		formatter: function(value) {
+    			var d = new Date();
+    			d.setTime(value);
+//     			console.log(d);
+    			return DateUtil.getDate("yyyy:MM:dd HH:mm:ss",d);
+    		}
+    };
+    $('#slider').slider('destroy')
+    $('#slider').slider(option);
+    $('#slider').on('slide',function(ev){
+    	var keys = log.getKeys();
+    	var gpss = new Array();
+    	var oldZoom = GmapUtil.getZoom(getMap());
+    	for (var i = 0; i < keys.length; i++) {
+    		var atData = log.get(keys[i]);
+    		var rg = atData.setTime(ev.value);
+    		if(rg){gpss.push(rg)}
+	    	for (var z = 0; atData.graph && z < atData.graph.length; z++) {
+	    		atData.graph[z].setXLine(ev.value);
+	    		//console.log("key:"+keys[i]+"   "+atData.graph[z]+"   "+ev.value);
+	    	}
+    		
+    	}
+    	GmapUtil.fitBounds(getMap(),gpss);
+    	if(oldZoom!=GmapUtil.getZoom(getMap()))
+    	GmapUtil.setZoom(getMap(),oldZoom);
+    	
+    	//alert(ev);
+    });
+    select();
+    
+}
 
 
 
 
 </script>
-<body>
+<body style="margin-top: 85px;" data-spy="scroll">
+<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#alert">Windows 8 modal - Click to View</button> -->
 	<!-- nav start -->
 	<fluid:insertView id="page-body-nav"/>
 	<!-- nav end -->
-	
   <!-- page Start --> 
-	<div id="container" class="container-fluid" >
-	
-<!--     <div class="row row-centered"> -->
-<!--         <div class="col-xs-6 col-centered"><div class="item"><div class="content">1</div> 11</div></div> -->
-<!--         <div class="col-xs-6 col-centered"><div class="item"><div class="content">2</div> 22</div></div> -->
-<!--         <div class="col-xs-3 col-centered"><div class="item"><div class="content">3</div> 33</div></div> -->
-<!--         <div class="col-xs-3 col-centered"><div class="item"><div class="content">4</div> 44</div></div> -->
-<!--         <div class="col-xs-3 col-centered"><div class="item"><div class="content">5</div> 55</div></div> -->
-<!--     </div> -->
-	
-      <!-- Three columns of text below the carousel -->
-      <div class="row row-centered">
-        <div class="col-md-4 col-centered">
-        </div>
-        
-        <div class="col-md-4 col-centered" >
-        	<div class="item" style="width: 100%">
-        		<div class="content">
-			          <img class="img-circle" src="/user/profile.png?u=${param.u}" width="140" height="140"/>
-			          <h2 id="user_name"></h2>
-			          <p>
-<!-- 			          <span id="introduce-container">you timelog introduce...edit</span> -->
-<!-- 			          <a href="#" id="introduce-edit-btn"><span class="fa fa-pencil-square-o" aria-hidden="true"></span></a> -->
-<!-- 			          <a href="#" id="introduce-save-btn"><span class="fa fa-floppy-o" aria-hidden="true"></span></a> -->
-			          </p>
-				</div>
-			</div>
-        </div><!-- /.col-lg-4 -->
-        
-        <div class="col-md-4 col-centered">
-        </div>
-      </div><!-- /.row -->
-      <div class="row" style="padding: 15px;">
-      			<div class="input-group">
-					  <div>
-					<!-- data-live-search="true" -->
-				          <select id="log-list" data-width="100%"  data-showSubtext="true" data-selected-text-format="count" class="selectpicker" title="Selected Logs ..." multiple  data-live-search-placeholder="Search" data-actions-box="true" data-dropupAuto="false">
-				           </select>
-			          </div>
-		          <c:if test="${ROLEK.USER_SEQ==param.u}">
-				      <div class="input-group-btn">
-					        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-plus" aria-hidden="true"></span></button>
-					        <ul id="addLog-container" class="dropdown-menu dropdown-menu-right">
-	<!-- 				          <li><a id="map" href="#"><span class="fa fa-map"></span> Map</a></li> -->
-					          <!-- li role="separator" class="divider"></li-->
-					        </ul>
-				      </div><!-- /btn-group -->
-			      </c:if>
-			     <span class="input-group-btn">
-			        <button id="search" class="btn btn-default" type="button"><a><span class="fa fa-search" aria-hidden="true"></span>Search</a></button>
-			      </span>
-			    </div><!-- /input-group -->
-      </div>
-	
-	
-	<div id="map-container" style="display: none;">
-<!-- 	<div id="map-container"  style="margin-bottom:10px;"> -->
+  
+  <nav class="navbar-fixed-top" style="margin-top: 36px; padding: 15px; z-index: 10;">
+  	<div class="row">
+           <div  class="input-group date form_datetime col-xs-5 col-md-6" style="float: left;">
+<!--            		<span class="input-group-addon" style="background-color:#fff;">from</span> -->
+				<span class="input-group-addon" style="padding:5px;"><span class="glyphicon glyphicon-calendar"></span></span>
+				<button id="from-date" class="form-control btn btn-default" style="padding:2px" type="button">fromDate</button>
+           </div>
+           <div  class="input-group date form_datetime col-xs-7 col-md-6" style="float: left;">
+				<span class="input-group-addon" style="padding:5px;" >~<span class="glyphicon glyphicon-calendar"></span></span>
+				<button id="to-date" class="form-control btn btn-default" style="padding:2px" type="button">toDate</button>
+				<div class="input-group-btn">
+				        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-plus" aria-hidden="true"></span></button>
+				        <ul id="addLog-container" class="dropdown-menu dropdown-menu-right">
+<!-- 				          <li><a id="map" href="#"><span class="fa fa-map"></span> Map</a></li> -->
+				          <!-- li role="separator" class="divider"></li-->
+				        </ul>
+				 </div>
+           </div>
+	</div>
+  </nav> 
+  
+	<div id="map-container" class="container-fluid" style="display: none;">
 		<div class="panel panel-default">
-			<div class="panel-heading" style="padding:3px; text-align: right;">map <button id="map-toggle" style="padding-top: 0px; padding-bottom: 0px;" class="btn btn-default" type="button"><span class="fa fa-bars" aria-hidden="true"></span></span></button></div>
-		  <div class="panel-body" id="googlemap" style="height:280px; " >
+		  <div class="panel-body" id="googlemap" style="height:300px;" >
 		    Panel content
 		  </div>
-<!-- 		  <div class="panel-footer"> -->
-<!-- 		  </div> -->
+		  <div class="panel-footer">
+		  <button id="mygis" class="btn btn-default" style="border-radius:4px;" type="button"><span class="fa fa-map-marker" aria-hidden="true"></span></span></button>
 		  </div>
+		</div>
 	</div>
 	
-	
-	<div id="log-container"  >
+	<div id="log-container" class="container-fluid" >
 	</div>
 	
-	<div id="slider-container"  >
+	<div id="slider-container" class="container-fluid" >
 	  <nav class="navbar-fixed-bottom" style="padding-bottom: 10px; padding-left: 60px; padding-right: 60px;">
 	  	<div class="row">
 	  		<div class="col-xs-12 col-md-12">
@@ -1294,8 +1166,7 @@ function getMap(){
 	  		</div>
 	  	</div>
 	  </nav> 
+		<!-- page END -->
+		<fluid:insertView id="page-body-footer"/>
     </div> <!-- /container -->
-	<!-- page END -->
-	<fluid:insertView id="page-body-footer"/>
-	</div>
 </body>

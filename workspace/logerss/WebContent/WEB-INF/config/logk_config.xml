@@ -47,7 +47,7 @@
 		<saver>
 			<dateformat>yyyy-MM-dd</dateformat>
 			<save>true</save>
-			<savepath>c:\logk</savepath>
+			<savepath>/opt/apache-tomcat-8.0.30/webapps/logerss/WEB-INF/log</savepath>
 			<append>true</append>
 			<filename>logerss_%d.log</filename>
 		</saver>

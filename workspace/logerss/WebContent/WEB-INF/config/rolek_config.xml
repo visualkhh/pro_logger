@@ -14,7 +14,6 @@ type = delet  :  상속을 받더라도 지웁니다. 또 자신에 포함하지
 			<fnc id="R" value="true"/>
 			<fnc id="IS_LOGIN" value="false"/>
 		</join>
-		<join url="/view/test"/>
 		<join url="/view/signin">
 			<fnc id="R" value="true"/>
 			<fnc id="IS_LOGIN" value="false"/>
@@ -23,14 +22,44 @@ type = delet  :  상속을 받더라도 지웁니다. 또 자신에 포함하지
 			<fnc id="R" value="true"/>
 			<fnc id="IS_LOGIN" value="false"/>
 		</join>
-		<join url="/ajax/sign">
-			<fnc id="SIGNUP" value="true"/>
-			<fnc id="SIGNIN" value="true"/>
+		<join url="/view/gis/opengis">
+			<fnc id="R" value="true"/>
 			<fnc id="IS_LOGIN" value="false"/>
+		</join>
+		<join url="/view/log.*">
+			<fnc id="R" value="true"/>
+			<fnc id="IS_LOGIN" value="false"/>
+		</join>
+		<join url="/view/search.*">
+			<fnc id="R" value="true"/>
+			<fnc id="IS_LOGIN" value="false"/>
+		</join>
+<!-- 		<join url="/ouser/[0-9]+/profile.png"  forward="${'/WEB-INF'}/ouser/[0-9]+/${'profile.png'}"  type="new"> -->
+<!-- 		<join url="^/ouser/profile.png\?u=[0-9]+"  forward="${'/WEB-INF/users/'}${param.u}${'/profile.png'}"  type="new"> -->
+<!-- 			<fnc id="R" value="true"/> -->
+<!-- 		</join> -->
+		<join url="^/user/profile.png\?u=[0-9]+"  forward="${'/WEB-INF/users/'}${param.u}${'/profile.png'}"  type="new">
+			<fnc id="R" value="true"/>
+		</join>
+		<join url="/view/test"/>
+		<join url="/ajax/sign">
+			<fnc id="R" value="true"/>
+			<fnc id="U" value="true"/>
 		</join>
 		<join url="/ajax/info">
 			<fnc id="R" value="true"/>
-			<fnc id="IS_LOGIN" value="false"/>
+		</join>
+		<join url="/ajax/gis">
+			<fnc id="R" value="true"/>
+		</join>
+		<join url="/ajax/api">
+			<fnc id="R" value="true"/>
+		</join>
+		<join url="/ajax/user">
+			<fnc id="R" value="true"/>
+		</join>
+		<join url="/ajax/log">
+			<fnc id="R" value="true"/>
 		</join>
 	</role>
 	
@@ -38,9 +67,7 @@ type = delet  :  상속을 받더라도 지웁니다. 또 자신에 포함하지
 		<join url="/view">
 			<fnc id="IS_LOGIN" value="true"/>
 		</join>
-		<join url="/user.*"  forward="${/WEB-INF/users/}${USER_EMAIL}/user(.+).*"  type="new">
-			<fnc id="R" value="true"/>
-		</join>
+<!-- 		<join url="/user.*"  forward="${'/WEB-INF/users/'}${ROLEK.USER_SEQ}/user(.+).*"  type="new"> -->
 		<join url="/view/log.*" type="new">
 			<fnc id="R" value="true"/>
 			<fnc id="C" value="true"/>
@@ -55,7 +82,11 @@ type = delet  :  상속을 받더라도 지웁니다. 또 자신에 포함하지
 			<fnc id="D" value="true"/>
 			<fnc id="IS_LOGIN" value="true"/>
 		</join>
-		<join url="/ajax/.*" type="new">
+		<join url="/view/gis/opengis">
+			<fnc id="R" value="true"/>
+			<fnc id="IS_LOGIN" value="true"/>
+		</join>
+		<join url="/ajax/.*">
 			<fnc id="R" value="true"/>
 			<fnc id="C" value="true"/>
 			<fnc id="U" value="true"/>

@@ -3,6 +3,7 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@page import="khh.property.util.PropertyUtil"%>
 <%@taglib prefix="fluid"  uri="http://visualkhh.com/fluid"%>
+</script>
 <script type="text/javascript">
 EventUtil.addOnloadEventListener(function(){
 	var param = {
@@ -16,7 +17,7 @@ EventUtil.addOnloadEventListener(function(){
 			//onComplete:ajaxComplete,
 			dataType:"XML"
 		};
-	ajax(param,"notice loading..");
+	//ajax(param,"notice loading..");
 	//var ajax = new AjaxK(param);
 	//$('#task-container').modal('show');
 });
@@ -42,47 +43,90 @@ function ajaxCallBack(data,readyState,status){
 	
 
   <!-- page Start -->
-    <div class="jumbotron"  style="color:rgb(255,175,15); height:500px; background: no-repeat -0px 0 / cover url(/front-end/img/IMG_9619-PANO.jpg);">
+    <div class="jumbotron"  style="color:rgb(255,175,15); height:400px; background: no-repeat -0px 0 / cover url(/front-end/img/IMG_9619-PANO.jpg);">
       <div class="container" >
         <h1>Hello, Log your life!</h1>
         <p>It analyzes to compare the Log.</p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+        <p><h1><span class="fa fa-bar-chart" aria-hidden="true"></span></h1></p>
+<!--         <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p> -->
       </div>
     </div>
 
     <div class="container">
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p><div id="notice_container"></div></p>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-        
-                <div class="col-md-3">
-            <ul class="nav nav-stacked admin-menu">
-                <li><h4>Select Resource</h4></li>
-                <li class="active"><a href="#" data-target-id="home"><i class="fa fa-home fa-fw"></i>Global Permissions</a></li>
-                <li><a href="http://www.jquery2dotnet.com" data-target-id="widgets"><i class="fa fa-list-alt fa-fw"></i>Security Settings</a></li>
-                <li><a href="http://www.jquery2dotnet.com" data-target-id="pages"><i class="fa fa-file-o fa-fw"></i>Batch Processing</a></li>
-                <li><a href="http://www.jquery2dotnet.com" data-target-id="charts"><i class="fa fa-bar-chart-o fa-fw"></i>Users</a></li>
-            </ul>
-        </div>
-      </div>
-${ROLEK.join}  <br>
-${ROLEK.session}<br>
-${ROLEK.USER_EMAIL}
+
+	<h3 style="color:rgb(255,162,6);"><fluid:insertTag  name="img" id="icon" target="src"/>logers It supports many types logs.</h3>
+		<div class="row">
+		
+		
+		
+		  <div class="col-sm-6 col-md-3" style="margin-bottom:55px;">
+		    <div class="thumbnail" style="padding: 12px;" >
+		      <div class="caption">
+		        <h3>GPS Log <span class="fa fa-map"></span> </h3>
+		        <p>Location-based data log support(Google Map, Tracking)</p>
+<!-- 		        <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> -->
+		      </div>
+		      	<img src="/front-end/img/maplog.jpg" alt="maplog" style="border:1px solid #ddd;border-radius:10px;"/>
+		    </div>
+		  </div>
+		
+		
+		  <div class="col-sm-6 col-md-3" style="margin-bottom:55px;">
+		    <div class="thumbnail" style="padding: 12px;">
+		      <div class="caption">
+		        <h3>Data Log <span class="fa fa-area-chart"></span></h3>
+		        <p>Nromal data log support(Tracking)</p>
+		      </div>
+		      <img src="/front-end/img/datalog.jpg" alt="maplog" style="border:1px solid #ddd;border-radius:10px;"/>
+		    </div>
+		  </div>
+		
+		
+		  <div class="col-sm-6 col-md-3" style="margin-bottom:55px;">
+		    <div class="thumbnail" style="padding: 12px;">
+		      <div class="caption">
+		        <h3>Photo Log <span class="fa fa-picture-o"></span></h3>
+		        <p>Picture log support(Google Map, Tracking)</p>
+		      </div>
+		      <img src="/front-end/img/photolog.jpg" alt="maplog" style="border:1px solid #ddd;border-radius:10px;"/>
+		    </div>
+		  </div>
+		  
+		  <div class="col-sm-6 col-md-3" style="margin-bottom:55px;">
+		    <div class="thumbnail" style="padding: 12px;" >
+		      <div class="caption">
+		        <h3>Message Log <span class="fa fa-envelope"></span></h3>
+		        <p>Message log support(Google Map, Tracking)</p>
+		      </div>
+		      <img src="/front-end/img/msglog.jpg" alt="maplog" style="border:1px solid #ddd;border-radius:10px;"/>
+		    </div>
+		  </div>
+		
+		
+		
+		
+		<div class="row">
+		  <div class="col-sm-6 col-md-3" style="margin-bottom:55px;">
+		    <div class="thumbnail" style="padding: 12px;" >
+		      <div class="caption">
+		        <h3>Open Gis <span class="fa fa-map-pin"></span></h3>
+		        <p>Anonymous real-time location sharing(Google Map)</p>
+		      </div>
+		      <img src="/front-end/img/opengis.jpg" alt="maplog" style="border:1px solid #ddd;border-radius:10px;"/>
+		    </div>
+		  </div>
+		</div>
+		
+		
+		
+		
+		  
+		  
+		  
+		  </div>
+
+<!-- 	<img src="https://loger.ga/ajax/sign?email=a&password=aaaaa&MN=in"/> -->
+
 	<!-- page END -->
 	<fluid:insertView id="page-body-footer"/>
     </div> <!-- /container -->

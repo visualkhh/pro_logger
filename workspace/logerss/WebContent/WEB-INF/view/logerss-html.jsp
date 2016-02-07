@@ -26,69 +26,200 @@
 	<fluid:insertTag id="page-head-javascript" name="script" attribute="type='text/javascript'" target="src"></fluid:insertTag>
 	
     <style type="text/css">
-	html,
-	body {
-	  overflow-x: hidden; Prevent scroll on narrow devices
+	html{
+		overflow-x: hidden; 
 	}
 	body {
-/* 	  padding-top: 45px; */
+		overflow-x: hidden;
+	    height: 100%;
+	    width: 100%;
+ 	    position: absolute; 
+	    padding-right: 0 !important;
+	}
+	.navbar{
+		margin:0px;
 	}
 	footer {
 	  padding: 30px 0;
 	}
+	.modal-dialog{
+	    overflow-y: initial !important
+	}
+	.modal .modal-body {
+	    overflow-y: auto;
+	}
+	#popup-body
+	{
+	  min-height:auto;
+	  max-height:380px;
+	  overflow:auto;
+	}
+	.modal-open .no-jump {
+	overflow-y:scroll;
+	}
+	
+	
+	.modal-backdrop.fade.in {
+	    z-index: -1;
+	    display: none;
+	}
+	
+	
+	
     </style>
 	<%--START JAVASCRIPT GLOBAL--%>
 	<script type="text/javascript">
 	//$(document).ready(
 	EventUtil.addOnloadEventListener(function(){
-		//$('#task-container').modal('show');
 		window.alert 	= alertDialog;
 		window.confirm 	= confirmDialog;
 	});
 	
 	//module....
-	function ajax(param, title){
+	function ajax(param, title, dialogBoolean){
 		var before = param.onBeforeProcess;
 		var complet = param.onComplete;
+		var onSuccess = param.onSuccess;
 		var error = param.onError;
 		if(!param.data){
 			param.data = {};
 		}
-		//param.data["REQUEST_KEY"] = param.data["REQUEST_KEY"]?param.data["REQUEST_KEY"]:JavaScriptUtil.getUniqueKey(); //유일한 값 
-		param.data["REQUEST_KEY"] = JavaScriptUtil.getUniqueKey(); //유일한 값 
-		if(!title){
-			title=param.data.url+" loading...";
+		
+		
+		if(dialogBoolean==undefined){
+			dialogBoolean = true;
 		}
-		param.onBeforeProcess = function(aData){
-			if(before)
-				before(aData);
-			addTask("fa-spinner fa-pulse",title,aData.data.REQUEST_KEY);
+		
+		if(dialogBoolean){//show dialog
+			param.data["REQUEST_KEY"] = JavaScriptUtil.getUniqueKey(); //유일한 값 
+			if(!title){
+				title=param.data.url+" loading...";
+			}
+			param.onBeforeProcess = function(aData){
+				if(before)
+					before(aData);
+				addTask("fa-spinner fa-pulse",title,aData.data.REQUEST_KEY);
+			}
+			param.onError = function(data,readyState,status){
+				if(error)
+					error(data,readyState,status);
+				alert("Server Communication ERROR("+status+")");
+			}
+			param.onComplete = function(aData){
+				if(complet)
+					complet(aData);
+				removeTask(aData.data.REQUEST_KEY);
+			}
 		}
-		param.onError = function(data,readyState,status){
-			if(error)
-				error(data,readyState,status);
-			alert("Server Communication ERROR("+status+")");
-		}
-		param.onComplete = function(aData){
-			if(complet)
-				complet(aData);
-			removeTask(aData.data.REQUEST_KEY);
-		}
+		
 		var ajax = new AjaxK(param);
 	}
-	function loadPage(url_oparam,successcallback,param){
-		var aParam ={};
-		if(JavaScriptUtil.isString(url_oparam)){
-			aParam['url'] = url_oparam;
-			aParam['type'] = 'POST';
-			aParam['dataType'] = 'TEXT';
-			aParam['onSuccess'] = successcallback;
-		}else if(JavaScriptUtil.isObject(url_oparam)){
-			aParam = url_oparam;
-			aParam['dataType'] = aParam['dataType']?aParam['dataType']:'TEXT';
-			aParam['onSuccess'] = aParam['onSuccess']?aParam['onSuccess']:successcallback;
+// 	function ajax(param, title, dialogBoolean){
+// 		var before = param.onBeforeProcess;
+// 		var complet = param.onComplete;
+// 		var onSuccess = param.onSuccess;
+// 		var error = param.onError;
+// 		if(!param.data){
+// 			param.data = {};
+// 		}
+		
+		
+// 		if(dialogBoolean==undefined){
+// 			dialogBoolean = true;
+// 		}
+		
+// 		if(dialogBoolean){//show dialog
+// 			param.data["REQUEST_KEY"] = JavaScriptUtil.getUniqueKey(); //유일한 값 
+// 			if(!title){
+// 				title=param.data.url+" loading...";
+// 			}
+// 			param.onBeforeProcess = function(aData){
+// 				if(before)
+// 					before(aData);
+// 				addTask("fa-spinner fa-pulse",title,aData.data.REQUEST_KEY);
+// 			}
+// 			param.onError = function(data,readyState,status){
+// 				if(error)
+// 					error(data,readyState,status);
+// 				alert("Server Communication ERROR("+status+")");
+// 			}
+// 			param.onComplete = function(aData){
+// 				if(complet)
+// 					complet(aData);
+// 				removeTask(aData.data.REQUEST_KEY);
+// 			}
+// 		}
+// 		var ajax = new AjaxK(param);
+// 	}
+	function request(param, title, dialogBoolean){
+		var success = param.onSuccess;//onSuccess : function(data,readyState,status),
+		var error = param.onError;//onSuccess : function(data,readyState,status),
+		if(!param.data){
+			param.data = {};
 		}
-		ajax(aParam,"loadPage");
+		param['type'] = param['type']||"POST";
+		param['dataType'] = param['dataType']||'XML';  //default dataType XML
+		param.onSuccess = function(data,readyState,status){
+			if(success){
+				var status_code = $(data).find("ROOT>STATUS_CODE").text();
+				var status_msg = $(data).find("ROOT>STATUS_MSG").text();
+				var request_key = $(data).find("ROOT>REQUEST_KEY").text();
+				var arr = new Array()
+				arr.STATUS_CODE = status_code;
+				arr.STATUS_MSG = status_msg;
+				arr.REQUEST_KEY = request_key;
+				
+				if(STATUS_CODE_SUCCESS==status_code){ //성공
+					$(data).find("ROOT>RESULT>TABLE>RECODE").each(function(index){
+						var obj = new Object();
+						 $(this).children().each(function(){
+							 obj[$(this)[0].tagName] =  $(this).text();	//setting
+							});
+						 arr.push(obj);
+					});
+					success(arr);
+				}else{	//실패
+					alert("request fail!! "+status_msg+"("+status_code+")");
+					if(error){
+						error(arr);
+					}
+				}
+				
+			}
+		}
+		ajax(param, title, dialogBoolean);
+	}
+	function loadPage(param,successcallback){
+		param['type'] = 'POST';
+		param['dataType'] = param['dataType']||'TEXT';  //default dataType TEXT
+		param['onSuccess'] = param['onSuccess']||successcallback;  
+		ajax(param,"loadPage.. (URL : "+param['url']+")");
+	}
+	function popup(param){
+		$('#popup-body').empty();
+		$('#popup-title').empty();
+		$('#popup-footer').empty();
+		
+		$("#popup-container").unbind();
+		$('#popup-body').html(param.body);
+		$('#popup-title').html(param.title);
+		
+
+		if(param.btn){
+			$('#popup-footer').append($("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>"));
+			for (var i = 0; i < param.btn.length; i++) {
+				var c = $("<button type='button' class='btn btn-primary'>"+param.btn[i].title+"</button>");
+				c.click(param.btn[i].callback);
+				$('#popup-footer').append(c);
+			}
+		}
+		if (!$('#popup-container').is(':visible')) {
+		    // if modal is not shown/visible then do something
+			$('#popup-container').modal('show');
+		}
+	}
+	function popupClose(){
+		$('#popup-container').modal('hide');
 	}
 	//module end...
 	
@@ -98,17 +229,19 @@
 	//dialog....
 	function confirmDialog(msg, okCallBack, noCallBack, cancleCallBack){
 		$("#confirm-container").unbind();
-		$("#confirm-ok-btn").unbind();
+		$("#confirm-yes-btn").unbind();
 		$("#confirm-no-btn").unbind();
 		$("#confirm-cancle-btn").unbind();
 		
 		$("#confirm-container").click(function(event){	try{cancleCallBack(event);}catch (error){}	event.stopPropagation();	$('#confirm-container').modal('hide'); return false;});
-		$("#confirm-ok-btn").click(function(event){		try{okCallBack(event);}catch (error){}		event.stopPropagation();	$('#confirm-container').modal('hide'); return true;});
+		$("#confirm-yes-btn").click(function(event){		try{okCallBack(event);}catch (error){}		event.stopPropagation();	$('#confirm-container').modal('hide'); return true;});
 		$("#confirm-no-btn").click(function(event){		try{noCallBack(event);}catch (error){}		event.stopPropagation();	$('#confirm-container').modal('hide'); return false;});
 		$("#confirm-cancle-btn").click(function(event){	try{cancleCallBack(event);}catch (error){}	event.stopPropagation();	$('#confirm-container').modal('hide'); return false;});
 		
 		$('#confirm-info-container').html(msg);
+		if (!$('#confirm-container').is(':visible')) {
 		$('#confirm-container').modal('show');
+		}
 	}
 	
 	function alertDialog(msg, okCallBack, cancleCallBack){
@@ -121,7 +254,9 @@
 		$("#alert-cancle-btn").click(function(event){	try{cancleCallBack(event);}catch (error){}	event.stopPropagation();	$('#alert-container').modal('hide'); return false;});
 		
 		$('#alert-info-container').html(msg);
-		$('#alert-container').modal('show');
+		if (!$('#alert-container').is(':visible')) {
+			$('#alert-container').modal('show');
+		}
 	}
 	function addTask(type, msg, key){
 		/*
@@ -132,11 +267,13 @@
 // 		 $('#task-list-container').append( "<h4><span class='fa fa-tasks' aria-hidden='true'></span> "+msg+"</h4>" );
 		
 		 $('#task-list-container').append( "<h4 id='"+key+"'><span class='fa "+type+"' aria-hidden='true'></span> "+msg+"</h4>" );
-		 $('#task-container').modal('show');
+		 if (!$('#task-container').is(':visible')) {
+		 	$('#task-container').modal('show');
+		 }
 	}
 	function removeTask(key){
 		$("#"+key).remove();
-		var count = $("task-list-container").children().length;
+		var count = $("#task-list-container").children().length;
 		if(count<=0){
 			$('#task-container').modal('hide');
 		}
@@ -146,7 +283,64 @@
 	<%--END JAVASCRIPT--%>
   </head>
 
+
+
+
 <!-- hiden container -->
+		<div id="popup-container" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header" style="padding-left: 10px;padding-right: 10px; padding-top: 5px; padding-bottom: 5px;">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4   class="modal-title" id="popup-title"></h4>
+		      </div>
+		      <div id="popup-body"class="modal-body" style="padding-left: 10px;padding-right: 10px; padding-top: 5px; padding-bottom: 5px;">
+		      </div>
+		      <div id="popup-footer" class="modal-footer" style="padding-left: 10px;padding-right: 10px; padding-top: 5px; padding-bottom: 5px;">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+		
+		<div id="confirm-container" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+		  <div class="modal-dialog modal-sm">
+		    <div id="task-info-container" class="modal-content">
+				<div class="modal-header">
+					<button id="confirm-cancle-btn"  type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					<h4 class="modal-title" ><span class="fa fa-question" aria-hidden="true"></span> <span id="confirm-title-container">Confirm</span></h4>
+				</div>
+				<div id="confirm-info-container" class="modal-body" >
+				.....
+				</div>
+				<div class="modal-footer" >
+				  <button id="confirm-no-btn" type="button" class="btn btn-default">No</button>
+				  <button id="confirm-yes-btn" type="button" class="btn btn-primary" data-dismiss="modal">Yes</button>
+				</div>
+		    </div>
+		  </div>
+		</div>
+		
+		
+		
+		
+		
+		<div id="alert-container" class="modal  fade bs-example-modal-md"   tabindex="-1" role="dialog" >
+		  <div class="modal-dialog modal-sm">
+		    <div id="task-info-container" class="modal-content">
+				<div class="modal-header" style="padding-left: 10px;padding-right: 10px; padding-top: 5px; padding-bottom: 5px;">
+					<button id="alert-cancle-btn" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					<h4 class="modal-title" ><span class="fa fa-info" aria-hidden="true"></span> <span id="alert-title-container">Alert</span></h4>
+				</div>
+				<div id="alert-info-container" class="modal-body" >
+				....
+				</div>
+				<div class="modal-footer" style="padding-left: 10px;padding-right: 10px; padding-top: 5px; padding-bottom: 5px;">
+				  <button id="alert-ok-btn" type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+				</div>
+		    </div>
+		  </div>
+		</div>
 	<div id="task-container" class="modal fade bs-example-modal-lg" style="padding-right: 0px;background-color: rgba(4, 4, 4, 0.8); " tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
 	  <div class="modal-dialog modal-lg" style="width: 100%;position: absolute;">
 	    <div class="modal-content" style="border-radius: 0px;border: none;top: 40%;">
@@ -155,50 +349,12 @@
 		       <H2><span class="fa fa-tasks" aria-hidden="true"></span> Task List!</H2>
 	      	</div>
 	      <div id="task-list-container" class="modal-body" style="background-color: #0f9966;color: white;">
-<!-- 	      <H2><span class="fa fa-tasks" aria-hidden="true"></span> Task List!</H2> -->
-	<!-- 	      <h4>Your Laptop battery is less then 10%.Recharge the battery.</h4> -->
-	<!-- 	      <h4>Your Laptop battery is less then 10%.Recharge the battery.</h4> -->
 	      </div>
 	    </div>
 	  </div>
 	</div>
-	
-		<div id="alert-container" class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-		  <div class="modal-dialog modal-sm">
-		    <div id="task-info-container" class="modal-content">
-				<div class="modal-header">
-					<button id="alert-cancle-btn" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-					<h4 class="modal-title" ><span class="fa fa-info" aria-hidden="true"></span> <span id="alert-title-container">Alert</span></h4>
-				</div>
-				<div id="alert-info-container" class="modal-body" >
-				....
-				</div>
-				<div class="modal-footer">
-				  <button id="alert-ok-btn" type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
-				</div>
-		    </div>
-		  </div>
-		</div>
-		
-		<div id="confirm-container" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-		  <div class="modal-dialog modal-sm">
-		    <div id="task-info-container" class="modal-content">
-				<div class="modal-header">
-					<button id="confirm-cancle-btn"  type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-					<h4 class="modal-title" ><span class="fa fa-question" aria-hidden="true"></span> <span id="confirm-title-container">Confirmt</span></h4>
-				</div>
-				<div id="confirm-info-container" class="modal-body" >
-				.....
-				</div>
-				<div class="modal-footer">
-				  <button id="confirm-ok-btn" type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
-				  <button id="confirm-no-btn" type="button" class="btn btn-default">No</button>
-				</div>
-		    </div>
-		  </div>
-		</div>
 <!-- hiden container end -->	
-		
+
   <!-- page-body -->
   <%--<body>--%>
 	<fluid:insertView id="page-body" exception="true"/>
