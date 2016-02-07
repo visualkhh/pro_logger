@@ -19,6 +19,7 @@
 	<script src="/front-end/bootstrap/plugin/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min2.js"></script>
 	<script src="/front-end/bootstrap/plugin/bootstrap-select-1.9.4/dist/js/bootstrap-select.js"></script>
 	<script src="/front-end/bootstrap/plugin/toastr-master/toastr.js"></script>
+	<script src="/front-end/bootstrap/plugin/bootstrap-toggle-master/js/bootstrap-toggle.js"></script>
     
 	<script type="text/javascript">
 	var STATUS_CODE_SUCCESS				= "<%=INFO.STATUS_CODE_SUCCESS			%>"; //성공 일반적인 리턴값이 없는 성공   

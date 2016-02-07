@@ -13,6 +13,7 @@
 <link href="/front-end/bootstrap/plugin/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 <link href="/front-end/bootstrap/plugin/bootstrap-select-1.9.4/dist/css/bootstrap-select.css" rel="stylesheet">
 <link href="/front-end/bootstrap/plugin/toastr-master/build/toastr.css" rel="stylesheet">
+<link href="/front-end/bootstrap/plugin/bootstrap-toggle-master/css/bootstrap-toggle.css" rel="stylesheet">
 <style type="text/css">
 	.container {
 /* 	  width: 1024px; */

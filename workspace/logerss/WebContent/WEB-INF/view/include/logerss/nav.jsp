@@ -54,7 +54,7 @@
             <span class="icon-bar"></span>
           </button>
           <span class="navbar-brand" style="">
-	          <a href="/view" style="color:rgb(255,162,6);"><fluid:insertTag  name="img" attribute="align='middle'" id="icon" target="src"/><span <rolek:insertString id="IS_LOGIN" equals="true">class="hidden-xs"</rolek:insertString>><fluid:insertString id="name"/></span></a>
+	          <a href="/view" style="color:rgb(255,162,6); text-decoration:none;"><fluid:insertTag  name="img" attribute="align='middle'" id="icon" target="src"/><span <rolek:insertString id="IS_LOGIN" equals="true">class="hidden-xs"</rolek:insertString>><fluid:insertString id="name"/></span></a>
 	          <rolek:insertString id="IS_LOGIN" equals="true">
 	          <li class="nav dropdown" style="float: right;">
 		          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="font-size: 14px; color:#777;  margin-left: 50px; " href="/view/mylog" >

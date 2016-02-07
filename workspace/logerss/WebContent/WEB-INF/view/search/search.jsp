@@ -44,7 +44,7 @@ function search(title){
 					    h+='<div class="blockquote-box blockquote-warning clearfix">';
 						h+=' <div class="media">';
 						h+='  <div class="media-left media-middle">';
-						h+='    <a href="/view/log?u='+at.seq+'" class="content">';
+						h+='    <a href="/view/log?u='+at.seq+'" style="text-decoration:none;"  class="content">';
 						h+='      <img class="img-circle" src="/user/profile.png?u='+at.seq+'" alt="Generic placeholder image" width="30" height="30"/>';
 						h+='      <h4 class="media-heading">'+at.name+'</h4>';
 						h+='    </a>';
@@ -54,7 +54,7 @@ function search(title){
 						
 						for (var y = 0; y < at.length; y++) {
 							
-						   h+=' <blockquote><a href="/view/log?u='+at.seq+'&id='+at[y].LOG_ID+'">';
+						   h+=' <blockquote><a style="text-decoration:none;" href="/view/log?u='+at.seq+'&id='+at[y].LOG_ID+'">';
 					       h+='            <span class="'+at[y].ICON+'"></span> '+at[y].TITLE;
 					       h+='            <p style="font-size: 14px;">'+at[y].MIN_DATE+' ~ '+at[y].MAX_DATE+'</p>';
 					       h+='</a></blockquote>';

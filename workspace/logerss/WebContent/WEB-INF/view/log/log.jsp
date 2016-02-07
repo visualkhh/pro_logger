@@ -295,6 +295,7 @@ EventUtil.addOnloadEventListener(function(){
 	$("#map-toggle").click(function(){
 		$("#googlemap").toggle();
 	});
+
 	
 	
 	$("#search").click(function(){
@@ -312,7 +313,6 @@ EventUtil.addOnloadEventListener(function(){
 			
 		}
 	});
-	
 	
 	
 	
@@ -377,8 +377,8 @@ function init(){
 					obj.max_date= Number(data[i].MAX_DATE);
 					log.put(data[i].LOG_ID,obj);
 					
-// 					var logE = $("#log-list-"+data[i].TYPE).append("<option id='log-list-item-"+data[i].LOG_ID+"' value='"+data[i].LOG_ID+"' data-subtext='("+obj.min_date+"~"+obj.max_date+")'>"+(data[i].TITLE)+"</option>");
-					var logE = $("#log-list-"+data[i].TYPE).append("<option id='log-list-item-"+data[i].LOG_ID+"' value='"+data[i].LOG_ID+"'>"+(data[i].TITLE)+"</option>");
+					var logE = $("#log-list-"+data[i].TYPE).append("<option id='log-list-item-"+data[i].LOG_ID+"' value='"+data[i].LOG_ID+"' data-subtext='("+obj.min_date+"~"+obj.max_date+")'>"+(data[i].TITLE)+"</option>");
+// 					var logE = $("#log-list-"+data[i].TYPE).append("<option id='log-list-item-"+data[i].LOG_ID+"' value='"+data[i].LOG_ID+"'>"+(data[i].TITLE)+"</option>");
 					$("#log-list").append(logE);
 				}
 				$('#log-list').selectpicker('refresh');
@@ -1031,8 +1031,8 @@ function addLog(id){
 	 	var graphArry = new Array();
 		var chart_data 	= new Array();
 		var dataMap 	= transTypeChartData(dataObj);
-		data['min_date'] = dataMap['min_date'];
-		data['max_date'] = dataMap['max_date'];
+		data['min_date'] = dataMap['min_date']||0;
+		data['max_date'] = dataMap['max_date']||0;
 		
 	 	var keys = dataMap.getKeys();
 		for (var i = 0; i < keys.length; i++) {
@@ -1129,6 +1129,7 @@ function addLog(id){
 		    		"max":data['max_date'],
 		    		"value":[data['min_date'],data['max_date']],
 		    		"tooltip":"hide",
+// 		    		"tooltip":"always",
 		    		formatter: function(value) {
 		    			var fd = new Date(value[0]);
 		    			var td = new Date(value[1]);
@@ -1155,8 +1156,8 @@ function addLog(id){
 		var keys = log.getKeys();
 		for(var i=0 ; i < keys.length ; i ++){
 			$("#log-list-item-"+log.get(keys[i]).id).remove();
-// 			var logE = $("#log-list-"+log.get(keys[i]).type).append("<option id='log-list-item-"+log.get(keys[i]).id+"' value='"+log.get(keys[i]).id+"' data-subtext='("+DateUtil.getDate('yyyy:MM:dd HH:mm:ss',log.get(keys[i]).min_date)+"~"+DateUtil.getDate('yyyy:MM:dd HH:mm:ss',log.get(keys[i]).max_date)+")'>"+log.get(keys[i]).title+"</option>");
-			var logE = $("#log-list-"+log.get(keys[i]).type).append("<option id='log-list-item-"+log.get(keys[i]).id+"' value='"+log.get(keys[i]).id+"'>"+log.get(keys[i]).title+"</option>");
+			var logE = $("#log-list-"+log.get(keys[i]).type).append("<option id='log-list-item-"+log.get(keys[i]).id+"' value='"+log.get(keys[i]).id+"' data-subtext='("+DateUtil.getDate('yyyy:MM:dd HH:mm:ss',log.get(keys[i]).min_date)+"~"+DateUtil.getDate('yyyy:MM:dd HH:mm:ss',log.get(keys[i]).max_date)+")'>"+log.get(keys[i]).title+"</option>");
+// 			var logE = $("#log-list-"+log.get(keys[i]).type).append("<option id='log-list-item-"+log.get(keys[i]).id+"' value='"+log.get(keys[i]).id+"'>"+log.get(keys[i]).title+"</option>");
 			$("#log-list").append(logE);
 		}
 		$('#log-list').selectpicker('refresh');
@@ -1264,7 +1265,7 @@ function getMap(){
 				      </div><!-- /btn-group -->
 			      </c:if>
 			     <span class="input-group-btn">
-			        <button id="search" class="btn btn-default" type="button"><a><span class="fa fa-search" aria-hidden="true"></span>Search</a></button>
+			        <button id="search" class="btn btn-default" type="button"><span class="fa fa-search" aria-hidden="true"></span><span class="hidden-xs"> Search</span></button>
 			      </span>
 			    </div><!-- /input-group -->
       </div>

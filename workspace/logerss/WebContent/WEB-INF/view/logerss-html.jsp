@@ -65,6 +65,11 @@
 	}
 	
 	
+	/* select box때문에 */
+	.text-muted{
+		display: block;
+	}
+	
 	
     </style>
 	<%--START JAVASCRIPT GLOBAL--%>
@@ -205,8 +210,8 @@
 		$('#popup-title').html(param.title);
 		
 
+		$('#popup-footer').append($("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>"));
 		if(param.btn){
-			$('#popup-footer').append($("<button type='button' class='btn btn-default' data-dismiss='modal'>Close</button>"));
 			for (var i = 0; i < param.btn.length; i++) {
 				var c = $("<button type='button' class='btn btn-primary'>"+param.btn[i].title+"</button>");
 				c.click(param.btn[i].callback);
