@@ -3,7 +3,12 @@
 <%@taglib prefix="fluid"  uri="http://visualkhh.com/fluid"%>
 <script type="text/javascript">
 EventUtil.addOnloadEventListener(function(){
+	var broswerInfo = navigator.userAgent;
 	
+// 	alert(window.Android);
+	
+// 	alert(AndroidFunction);
+	Android.showToast("hi");
 
 });
 </script>
@@ -13,7 +18,9 @@ EventUtil.addOnloadEventListener(function(){
 	<%--nav--%>
 	<div class="container">
 	
-	
+${param.a }	<br>
+${param.b }	<br>
+${param.c }	<br>
 <%
 
 java.util.Enumeration names = request.getHeaderNames();
@@ -27,7 +34,7 @@ while (names.hasMoreElements()) {
 <br/>
 <%= request.getSession().getId()%>
 	
-	
+	<button onclick="window.Android.showToast('hi');" value="aaaaaa">vvvvvvvvv</button>
 	<%--footer--%>
 	<%--<fluid:insertView id="page-body-footer"/> --%>
 	<%--footer--%>

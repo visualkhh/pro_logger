@@ -9,7 +9,7 @@
 	</select>
 	
 	<select id="is_user" >
-		SELECT A.USER_SEQ, A.NAME, A.EMAIL, A.PASSWORD, A.ROLE_BASE_SEQ, B.ROLE_SEQ, B.ROLE_NAME 
+		SELECT A.USER_SEQ, A.NAME, A.EMAIL, A.ROLE_BASE_SEQ, B.ROLE_SEQ, B.ROLE_NAME 
 		FROM lo_user_info A, lo_role_info B WHERE  A.EMAIL = #email# 
 		AND A.ROLE_BASE_SEQ = B.ROLE_SEQ
 	</select>
@@ -21,7 +21,7 @@
 	</select>
 	
 	<select id="select_user_find" >
-		SELECT A.USER_SEQ, A.NAME, A.EMAIL, A.PASSWORD, A.ROLE_BASE_SEQ, B.ROLE_SEQ, B.ROLE_NAME 
+		SELECT A.USER_SEQ, A.NAME, A.EMAIL,  A.ROLE_BASE_SEQ, B.ROLE_SEQ, B.ROLE_NAME 
 		FROM lo_user_info A, lo_role_info B WHERE  A.EMAIL = #email# AND A.PASSWORD = #password#
 		AND A.ROLE_BASE_SEQ = B.ROLE_SEQ
 	</select>
@@ -55,7 +55,8 @@
 	 
 	 
 	<select id="select_logtype" >
-		SELECT LOG_SEQ, TYPE, ICON, EXECUTEFNC, PROTOTYPE FROM lo_log_type
+		SELECT LOG_SEQ, LOG_GBUN, TYPE, ICON, EXECUTEFNC, PROTOTYPE FROM lo_log_type
+		WHERE OPEN='Y'
 	</select>
 	
 	
@@ -67,34 +68,34 @@
 				FROM lo_log A,lo_log_type B 
 				WHERE A.LOG_SEQ = B.LOG_SEQ 
 				AND A.USER_SEQ  = #user_seq#
-				AND A.OPEN ='Y' 
+				AND A.OPEN ='Y' AND B.OPEN='Y'
 			) A LEFT OUTER JOIN lo_log_data B ON  A.USER_SEQ = B.USER_SEQ AND A.LOG_SEQ = B.LOG_SEQ AND A.LOG_ID = B.LOG_ID
-			GROUP BY B.USER_SEQ, B.LOG_SEQ, B.LOG_ID
+			GROUP BY A.USER_SEQ, A.LOG_SEQ, A.LOG_ID
 	</select>
 	
 	
 	<select id="select_log" >
-		SELECT A.USER_SEQ, A.LOG_SEQ, A.LOG_ID, A.TITLE, A.INSERT_DATE, A.OPEN, A.SENSOR ,A.TYPE, A.EXECUTEFNC, A.PROTOTYPE, 
+		SELECT A.USER_SEQ, A.LOG_SEQ, A.LOG_ID, A.TITLE, A.INSERT_DATE, A.OPEN ,A.TYPE, A.EXECUTEFNC, A.PROTOTYPE, 
 			IFNULL(MAX(B.LOG_DATE),0) MAX_DATE, IFNULL(MIN(B.LOG_DATE),0) MIN_DATE  FROM(
-			SELECT A.USER_SEQ, A.LOG_SEQ, A.LOG_ID, A.TITLE, A.INSERT_DATE ,A.OPEN, A.SENSOR
+			SELECT A.USER_SEQ, A.LOG_SEQ, A.LOG_ID, A.TITLE, A.INSERT_DATE ,A.OPEN
 				,B.TYPE,B.EXECUTEFNC, B.PROTOTYPE 		
 				FROM lo_log A,lo_log_type B 
-				WHERE A.LOG_SEQ = B.LOG_SEQ 
+				WHERE A.LOG_SEQ = B.LOG_SEQ AND B.OPEN='Y'
 				AND A.USER_SEQ  = #user_seq#
 			) A LEFT OUTER JOIN lo_log_data B ON  A.USER_SEQ = B.USER_SEQ AND A.LOG_SEQ = B.LOG_SEQ AND A.LOG_ID = B.LOG_ID
-			GROUP BY B.USER_SEQ, B.LOG_SEQ, B.LOG_ID
+			GROUP BY A.USER_SEQ, A.LOG_SEQ, A.LOG_ID
 	</select>
 	
 	
 	<select id="select_at_log" >
-	SELECT A.USER_SEQ, A.LOG_SEQ, A.LOG_ID, A.TITLE, A.INSERT_DATE, A.OPEN, A.SENSOR ,A.TYPE, A.EXECUTEFNC, A.PROTOTYPE, MAX(B.LOG_DATE) MAX_DATE, MIN(B.LOG_DATE) MIN_DATE  FROM(
-		SELECT A.USER_SEQ, A.LOG_SEQ, A.LOG_ID, A.TITLE, A.INSERT_DATE ,A.OPEN, A.SENSOR
+	SELECT A.USER_SEQ, A.LOG_SEQ, A.LOG_ID, A.TITLE, A.INSERT_DATE, A.OPEN ,A.TYPE, A.EXECUTEFNC, A.PROTOTYPE, MAX(B.LOG_DATE) MAX_DATE, MIN(B.LOG_DATE) MIN_DATE  FROM(
+		SELECT A.USER_SEQ, A.LOG_SEQ, A.LOG_ID, A.TITLE, A.INSERT_DATE ,A.OPEN
 			,B.TYPE,B.EXECUTEFNC, B.PROTOTYPE 		
 			FROM lo_log A,lo_log_type B 
-			WHERE A.LOG_SEQ = B.LOG_SEQ 
+			WHERE A.LOG_SEQ = B.LOG_SEQ AND B.OPEN='Y'
 			AND A.USER_SEQ  = #user_seq# AND A.LOG_SEQ=#log_seq# AND A.LOG_ID=#log_id#
 		) A LEFT OUTER JOIN lo_log_data B ON  A.USER_SEQ = B.USER_SEQ AND A.LOG_SEQ = B.LOG_SEQ AND A.LOG_ID = B.LOG_ID
-		GROUP BY B.USER_SEQ, B.LOG_SEQ, B.LOG_ID
+		GROUP BY A.USER_SEQ, A.LOG_SEQ, A.LOG_ID
 	</select>
 	
 	
@@ -103,14 +104,14 @@
 		WHERE USER_SEQ = #user_seq# AND LOG_SEQ = #log_seq# AND LOG_ID = #log_id#
 	</select>
 	<insert id="insert_log" >
-		INSERT INTO lo_log (USER_SEQ, LOG_SEQ, LOG_ID, TITLE, INSERT_DATE, OPEN, SENSOR)
-		VALUES (#user_seq#, #log_seq#, #log_id#, #title#, #date#, #open#, #sensor#)
+		INSERT INTO lo_log (USER_SEQ, LOG_SEQ, LOG_ID, TITLE, INSERT_DATE, OPEN)
+		VALUES (#user_seq#, #log_seq#, #log_id#, #title#, #date#, #open#)
 		ON DUPLICATE KEY 
-		UPDATE TITLE = #title#, INSERT_DATE = #date# , OPEN = #open#, SENSOR = #sensor#
-<!-- 		INSERT INTO LO_LOG (USER_SEQ, LOG_SEQ, LOG_ID, TITLE, DATA, INSERT_DATE) -->
-<!-- 		VALUES (#user_seq#, #log_seq#, #log_id#, #title#, #data#, #date#) -->
+		UPDATE TITLE = #title#, INSERT_DATE = #date# , OPEN = #open#
+<!-- 		INSERT INTO lo_log (USER_SEQ, LOG_SEQ, LOG_ID, TITLE, INSERT_DATE, OPEN, SENSOR) -->
+<!-- 		VALUES (#user_seq#, #log_seq#, #log_id#, #title#, #date#, #open#, #sensor#) -->
 <!-- 		ON DUPLICATE KEY  -->
-<!-- 		UPDATE TITLE = #title#, DATA =  #data#,	INSERT_DATE  = #date#; -->
+<!-- 		UPDATE TITLE = #title#, INSERT_DATE = #date# , OPEN = #open#, SENSOR = #sensor# -->
 	</insert>
 <!-- 	<insert id="update_log" > -->
 <!-- 		UPDATE LO_LOG SET TITLE = #title#,  DATA = #data#, INSERT_DATE = #date# -->
@@ -133,8 +134,8 @@ SELECT A.NAME, A.USER_SEQ, A.LOG_SEQ, A.LOG_ID, A.TITLE, A.INSERT_DATE, A.OPEN, 
 			SELECT C.NAME, A.USER_SEQ, A.LOG_SEQ, A.LOG_ID, A.TITLE, A.INSERT_DATE ,A.OPEN
 				,B.ICON,B.TYPE,B.EXECUTEFNC, B.PROTOTYPE 		
 				FROM lo_log A,lo_log_type B ,lo_user_info C
-				WHERE A.USER_SEQ = C.USER_SEQ AND A.LOG_SEQ = B.LOG_SEQ 
-				AND A.OPEN ='Y' AND A.TITLE LIKE CONCAT('%',#title#,'%')
+				WHERE A.USER_SEQ = C.USER_SEQ AND A.LOG_SEQ = B.LOG_SEQ  AND B.OPEN='Y'
+				AND A.OPEN ='Y' AND (A.TITLE LIKE CONCAT('%',#title#,'%') OR C.NAME LIKE CONCAT('%',#title#,'%'))
 			) A LEFT OUTER JOIN lo_log_data B ON  A.USER_SEQ = B.USER_SEQ AND A.LOG_SEQ = B.LOG_SEQ AND A.LOG_ID = B.LOG_ID
 			GROUP BY B.USER_SEQ, B.LOG_SEQ, B.LOG_ID
 	</select>
@@ -146,15 +147,20 @@ SELECT A.NAME, A.USER_SEQ, A.LOG_SEQ, A.LOG_ID, A.TITLE, A.INSERT_DATE, A.OPEN, 
 		WHERE A.USER_SEQ = #user_seq#  AND A.LOG_SEQ = #log_seq# AND 
 		A.LOG_ID =  #log_id#  AND A.OPEN='Y' AND
 		A.USER_SEQ = B.USER_SEQ AND A.LOG_SEQ = B.LOG_SEQ AND A.LOG_ID = B.LOG_ID AND
-		B.LOG_DATE BETWEEN #from_date#  AND #to_date#
+		B.LOG_DATE BETWEEN #from_date#  AND #to_date# ORDER BY LOG_DATE ASC
 	</select>
 	<select id="select_logdata" >
 		SELECT LOG_DATE, LOG_DATA FROM lo_log_data  
 		WHERE USER_SEQ = #user_seq#  AND LOG_SEQ = #log_seq# and LOG_ID = #log_id# 
-		AND LOG_DATE BETWEEN #from_date#  AND #to_date#
-	</select>
+		AND LOG_DATE BETWEEN #from_date#  AND #to_date# ORDER BY LOG_DATE ASC
+	</select> 
 	
 	<insert id="insert_logdata" >
+		INSERT INTO lo_log_data (USER_SEQ, LOG_SEQ, LOG_ID, LOG_DATE, LOG_DATA)
+		VALUES (#user_seq#, #log_seq#, #log_id#, #log_date#, #log_data#)
+	</insert>
+	
+	<insert id="insert_sensor_logdata" >
 		INSERT INTO lo_log_data (USER_SEQ, LOG_SEQ, LOG_ID, LOG_DATE, LOG_DATA)
 		VALUES (#user_seq#, #log_seq#, #log_id#, #log_date#, #log_data#)
 	</insert>

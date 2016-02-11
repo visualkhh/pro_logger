@@ -3,6 +3,10 @@
 <script type="text/javascript">
 EventUtil.addOnloadEventListener(function(){
 	$("#signin").click(submit);
+	$("#form").submit(function(event){
+		submit();
+		event.preventDefault();
+	});
 });
 
 function submit(){
@@ -15,24 +19,33 @@ function submit(){
 						"MN":"in"
 						},
 			onSuccess : ajaxSignInCallBack,
-			dataType:"XML"
+			onError : ajaxSignInErrorCallback
 		};
-	ajax(param,"Sign In request..");
+	request(param,"Sign In request..");
 }
 
-function ajaxSignInCallBack(data,readyState,status){
-	var status_code = $(data).find("ROOT>STATUS_CODE").text();
-	var status_msg = $(data).find("ROOT>STATUS_MSG").text();
+function ajaxSignInCallBack(data){
 	
-	if(STATUS_CODE_SUCCESS==status_code){ //성공
+	for (var i = 0; i < data.length; i++) {
+		
 		$("#success-signin-container").show();
 		$("#error-signin-container").hide();
-		setTimeout(LocationUtil.goHref("/view"), "1500")
-	}else{	//실패
-		$("#success-signin-container").hide();
-		$("#error-signin-container").show();
-		$("#error-signin-msg-container").html(status_msg+"("+status_code+")");
+		isSensor(function(sensor){
+			sensor.login($("#email").val(),$("#password").val(),data[i].USER_SEQ);
+			setTimeout(LocationUtil.goHref("/view/log?u="+data[i].USER_SEQ), "1500")
+		},function(){
+			setTimeout(LocationUtil.goHref("/view"), "1500")
+		});
+		
 	}
+
+
+}
+
+function ajaxSignInErrorCallback(data){
+	$("#success-signin-container").hide();
+	$("#error-signin-container").show();
+	$("#error-signin-msg-container").html(data.status_msg+"("+data.status_code+")");
 }
 
 
@@ -82,7 +95,7 @@ function ajaxSignInCallBack(data,readyState,status){
 												<span class="input-group-addon">
 													<i class="glyphicon glyphicon-user"></i>
 												</span> 
-												<input class="form-control" type="email" name="email" id="email" type="text" placeholder="Email Address" autofocus>
+												<input class="form-control" type="email" name="email" id="email" tabindex="1" type="text" placeholder="Email Address" autofocus>
 											</div>
 										</div>
 										<div class="form-group">
@@ -90,11 +103,11 @@ function ajaxSignInCallBack(data,readyState,status){
 												<span class="input-group-addon">
 													<i class="glyphicon glyphicon-lock"></i>
 												</span>
-												<input class="form-control" placeholder="Password" id="password" name="password" type="password" value="">
+												<input class="form-control" placeholder="Password" id="password" name="password" tabindex="2" type="password" value="">
 											</div>
 										</div>
 										<div class="form-group">
-											<input type="button" id="signin" class="btn btn-lg btn-primary btn-block" value="Sign in">
+											<input type="submit" id="signin" tabindex="3" class="btn btn-lg btn-primary btn-block" value="Sign in">
 										</div>
 									</div>
 								</div>

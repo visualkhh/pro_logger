@@ -19,7 +19,6 @@ function search(title){
 	var param_user = {
 			"url":"/ajax/log",
 			"data" : 	{"MN":"searchLog","title":title},
-			"async": false,
 			onSuccess : function(data){
 				var log = new HashMap();
 				for (var i = 0; i < data.length; i++) {
@@ -53,7 +52,8 @@ function search(title){
 						h+='  <div class="media-body">';
 						
 						for (var y = 0; y < at.length; y++) {
-							
+							at[y].MIN_DATE = transDate(at[y].MIN_DATE);
+							at[y].MAX_DATE = transDate(at[y].MAX_DATE);
 						   h+=' <blockquote><a style="text-decoration:none;" href="/view/log?u='+at.seq+'&id='+at[y].LOG_ID+'">';
 					       h+='            <span class="'+at[y].ICON+'"></span> '+at[y].TITLE;
 					       h+='            <p style="font-size: 14px;">'+at[y].MIN_DATE+' ~ '+at[y].MAX_DATE+'</p>';
@@ -71,6 +71,13 @@ function search(title){
 	}
 	request(param_user,"search request..");
 }
+
+function transDate(dataStr){
+	//var d = new Date(dataStr.substring(0,4), dataStr.substring(4,6), dataStr.substring(6,8), dataStr.substring(8,10), dataStr.substring(10,12), dataStr.substring(12,14), 0);
+	var d = dataStr.substring(0,4)+":"+dataStr.substring(4,6)+":"+dataStr.substring(6,8)+" "+dataStr.substring(8,10)+":"+dataStr.substring(10,12)+":"+dataStr.substring(12,14)
+	return d;
+}
+
 </script>
 <body>
 	<!-- nav start -->

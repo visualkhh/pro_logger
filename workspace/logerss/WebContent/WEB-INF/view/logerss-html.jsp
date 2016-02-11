@@ -119,43 +119,6 @@
 		
 		var ajax = new AjaxK(param);
 	}
-// 	function ajax(param, title, dialogBoolean){
-// 		var before = param.onBeforeProcess;
-// 		var complet = param.onComplete;
-// 		var onSuccess = param.onSuccess;
-// 		var error = param.onError;
-// 		if(!param.data){
-// 			param.data = {};
-// 		}
-		
-		
-// 		if(dialogBoolean==undefined){
-// 			dialogBoolean = true;
-// 		}
-		
-// 		if(dialogBoolean){//show dialog
-// 			param.data["REQUEST_KEY"] = JavaScriptUtil.getUniqueKey(); //유일한 값 
-// 			if(!title){
-// 				title=param.data.url+" loading...";
-// 			}
-// 			param.onBeforeProcess = function(aData){
-// 				if(before)
-// 					before(aData);
-// 				addTask("fa-spinner fa-pulse",title,aData.data.REQUEST_KEY);
-// 			}
-// 			param.onError = function(data,readyState,status){
-// 				if(error)
-// 					error(data,readyState,status);
-// 				alert("Server Communication ERROR("+status+")");
-// 			}
-// 			param.onComplete = function(aData){
-// 				if(complet)
-// 					complet(aData);
-// 				removeTask(aData.data.REQUEST_KEY);
-// 			}
-// 		}
-// 		var ajax = new AjaxK(param);
-// 	}
 	function request(param, title, dialogBoolean){
 		var success = param.onSuccess;//onSuccess : function(data,readyState,status),
 		var error = param.onError;//onSuccess : function(data,readyState,status),
@@ -184,9 +147,10 @@
 					});
 					success(arr);
 				}else{	//실패
-					alert("request fail!! "+status_msg+"("+status_code+")");
 					if(error){
 						error(arr);
+					}else{
+						alert("request fail!! "+status_msg+"("+status_code+")");
 					}
 				}
 				
@@ -283,6 +247,29 @@
 			$('#task-container').modal('hide');
 		}
 	}
+	
+	//////////.........
+	function getSensor(){
+		var s;
+		if(window.Android){
+			s = window.Android;
+		}else{
+		}
+		return s;
+	}
+	function isSensor(yfnc,nfnc){
+		var s = false;
+		if(window.Android){
+			s=true;
+			if(yfnc)
+			yfnc(getSensor());
+		}else{
+			if(nfnc)
+			nfnc();
+		}
+		return s
+	}
+	
 	//dialog end......
 	</script>
 	<%--END JAVASCRIPT--%>

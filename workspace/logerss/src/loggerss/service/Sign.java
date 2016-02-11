@@ -127,6 +127,9 @@ public class Sign {
 				ArrayList<Join> baseJoin = RoleK.getBaseJoin(role.get("USER_ROLE_NAME"));
 				/*여기에 고객role로  덮어버릴건 버리고..baseRole...*/
 				role.setJoinList(baseJoin);
+				
+				request.setAttribute("RESULT_ISCDATA", new Boolean(false));
+				request.setAttribute("RESULT", DBUtil.getXMLTagString(dc));
 				request.setAttribute("STATUS_CODE", INFO.STATUS_CODE_SUCCESS);
 			}else{
 				request.setAttribute("STATUS_CODE", INFO.STATUS_CODE_FAIL);

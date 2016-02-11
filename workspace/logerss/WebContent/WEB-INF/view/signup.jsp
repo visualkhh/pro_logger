@@ -90,7 +90,7 @@ function ajaxSignUpCallBack(data,readyState,status){
 									</div>
 								</div>
 					    			<div class="form-group">
-					    				<input type="email" name="email" id="email" class="form-control input-sm" placeholder="Email Address">
+					    				<input type="email" tabindex="1" name="email" id="email" class="form-control input-sm" placeholder="Email Address">
 					    			</div>
 					    			<div class="row">
 					    				<div class="col-xs-12 col-sm-12 col-md-12">
@@ -103,12 +103,12 @@ function ajaxSignUpCallBack(data,readyState,status){
 					    			<div class="row">
 					    				<div class="col-xs-6 col-sm-6 col-md-6">
 					    					<div class="form-group">
-					    						<input type="password" name="password" id="password" class="form-control input-sm" placeholder="Password">
+					    						<input type="password" tabindex="2" name="password" id="password" class="form-control input-sm" placeholder="Password">
 					    					</div>
 					    				</div>
 					    				<div class="col-xs-6 col-sm-6 col-md-6">
 					    					<div class="form-group">
-					    						<input type="password" name="password_confirmation" id="password_confirmation" class="form-control input-sm" placeholder="Confirm Password">
+					    						<input type="password" tabindex="3" name="password_confirmation" id="password_confirmation" class="form-control input-sm" placeholder="Confirm Password">
 					    					</div>
 					    				</div>
 					    			</div>

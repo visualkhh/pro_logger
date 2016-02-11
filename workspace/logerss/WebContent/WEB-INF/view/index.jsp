@@ -43,7 +43,7 @@ function ajaxCallBack(data,readyState,status){
 	
 
   <!-- page Start -->
-    <div class="jumbotron"  style="color:rgb(255,175,15); height:400px; background: no-repeat -0px 0 / cover url(/front-end/img/IMG_9619-PANO.jpg);">
+    <div class="jumbotron"  style="color:rgb(255,175,15); height:400px; background: no-repeat -0px 0 / cover url(/front-end/img/cover.jpg);">
       <div class="container" >
         <h1>Hello, Log your life!</h1>
         <p>It analyzes to compare the Log.</p>

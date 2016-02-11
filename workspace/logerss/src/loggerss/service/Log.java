@@ -146,7 +146,7 @@ public class Log {
 			
 			HashMap<String, Object> param = new HashMap<>();
 			String key="title";
-			param.put(key, request.getParameter(key));
+			param.put(key, null==request.getParameter(key)?"":request.getParameter(key));
 			
 			DBTResultSetContainer dc = db.executeMapQuery("search_log",param);
 			request.setAttribute("RESULT_ISCDATA", new Boolean(false));
@@ -202,6 +202,74 @@ public class Log {
 			
 			db.rollback();
 		}
+	}
+	public void saveLogSensorGPSData(HttpServletRequest request, HttpServletResponse response) throws Exception{
+		log.debug("saveLogSensorGPSData--> "+request+"    "+response);
+		DBTerminal db = dbResovler.getDBTerminal();
+		HashMap<String, Object> param = new HashMap<>();
+		
+		try {
+			String key="email";
+			param.put(key, request.getParameter(key));
+			
+			
+			key="password";
+			param.put(key, request.getParameter(key));
+			
+			DBTResultSetContainer dc = db.executeMapQuery("select_user_find",param);
+			if(dc.size()>0){
+				for (int i = 0; i < dc.size(); i++) {
+					DBTResultRecord row = dc.get(i);
+					
+					
+					key="user_seq";
+					param.put(key, row.get("USER_SEQ"));
+					
+					key="log_seq";
+					param.put(key, request.getParameter(key));
+					
+					key="log_id";
+					param.put(key, request.getParameter(key));
+					
+					key="log_date";
+					param.put(key, request.getParameter(key));
+					
+					//////////////////////////
+					key="log_data_lat";
+					String lat = request.getParameter(key); 
+					
+					key="log_data_lng";
+					String lng = request.getParameter(key); 
+					
+					key="log_data_altitude";
+					String altitude = request.getParameter(key); 
+					
+					key="log_data_speed";
+					String speed = request.getParameter(key); 
+					///////////////////////////
+					key="log_data";
+					param.put(key, "{\"latlng\":\""+lat+","+lng+"\", \"altitude\":\""+altitude+"\", \"speed\":\""+speed+"\"}");
+					int logUpdateCnt = db.executeMapUpdate("insert_logdata", param);
+					request.setAttribute("STATUS_CODE", INFO.STATUS_CODE_SUCCESS); 
+					
+				}
+			}else{
+				request.setAttribute("STATUS_CODE", INFO.STATUS_CODE_FAIL);
+				request.setAttribute("STATUS_MSG","no insert");
+				
+			}
+			
+			
+			
+			
+			
+		} catch (Exception e) {
+			request.setAttribute("STATUS_CODE", INFO.STATUS_CODE_FAIL);
+			request.setAttribute("STATUS_MSG", e.getMessage());
+		}
+		
+		
+		
 	}
 	public void saveLogData(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		log.debug("saveLogData--> "+request+"    "+response);

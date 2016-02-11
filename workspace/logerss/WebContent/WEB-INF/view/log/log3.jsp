@@ -12,38 +12,20 @@
 <script src="/front-end/graphK/graphk.js"></script>
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?v=3.exp&language=en_us"></script>
 <script type="text/javascript">
-function Log(){};
-Log.prototype = new Object();
-Log.prototype.id;
-Log.prototype.type				= "log";
-Log.prototype.open				= "N"; //공개 비공개  기본 비공개
-Log.prototype.isSearch; // 서치대상인가 아닌가. 서치버튼누를때마다 false 되고 완료되면 트루된다. 
-Log.prototype.min_date;//14554165155 초기 
-Log.prototype.max_date;//14554165155 초기 
-Log.prototype.chartAxisYCount	= 5;
-Log.prototype.chartAxisXCount	= 4;
-Log.prototype.title; //$('#map-form-title').val(),
-Log.prototype.data;//:eval("["+$('#map-form-data').val()+"]"),
-Log.prototype.init				= function(){}
-Log.prototype.chartData			= function(){return this.data;};
-Log.prototype.save				= function(){return save(this.id);};
-Log.prototype.edit 				= function(){};////각자
-Log.prototype.add				= function(){return addLog(this.id);};
-Log.prototype.remove			= function(){remove(this.id);};
-Log.prototype.insertData		= function(){return JavaScriptUtil.arrayToString(this.data);};		//DB에 저장히기전에 디코딩 컨버팅 역활한다
-Log.prototype.selectData		= function(getData){this.data=getData;};		// DB에서 가져온뒤 엔코딩 컨버팅 역활을한다.
-Log.prototype.setTime			= function(time){} //각자
-Log.prototype.finalize			= function(){
-		$("#container-"+this.id).remove();
-		$("#log-list-item-"+this.id).remove();
-};
 
-
-//class..........
+// class..........
 function MapLog(){};
-MapLog.prototype = new Log(); //상속
+MapLog.prototype = new Object();
+MapLog.prototype.id;
+MapLog.prototype.open="N"; //공개 비공개  기본 비공개
 MapLog.prototype.type='map';
 MapLog.prototype.chartType='linefill';
+MapLog.prototype.isSearch; // 서치대상인가 아닌가. 서치버튼누를때마다 false 되고 완료되면 트루된다. 
+MapLog.prototype.min_date;//14554165155 초기 
+MapLog.prototype.max_date;//14554165155 초기 
+
+MapLog.prototype.title; //$('#map-form-title').val(),
+MapLog.prototype.data;//:eval("["+$('#map-form-data').val()+"]"),
 MapLog.prototype.toggle=function(){
 	this.polyline['visible']=!this.polyline['visible'];
 	if(this.polyline['visible']){
@@ -53,10 +35,16 @@ MapLog.prototype.toggle=function(){
 	}
 };
 MapLog.prototype.chartData	= function(){return chartMapSpeedData(this.id);};
+MapLog.prototype.save		= function(){return save(this.id);};
 MapLog.prototype.edit 		= function(){return loadMapForm(this.id);};
-MapLog.prototype.add		= function(){var a = Log.prototype.add.call(this); this.polyline.setMap(getMap()); return a;};
+MapLog.prototype.remove	= function(){remove(this.id);};
+MapLog.prototype.add		= function(){var a = addLog(this.id); this.polyline.setMap(getMap()); return a;};
+MapLog.prototype.insertData	= function(){return JavaScriptUtil.arrayToString(this.data);};		//DB에 저장히기전에 디코딩 컨버팅 역활한다
+MapLog.prototype.selectData	= function(getData){this.data=getData;};		// DB에서 가져온뒤 엔코딩 컨버팅 역활을한다.
 MapLog.prototype.setTime	= function(time){
-	if(transDate(this.min_date).getTime()> time || time > transDate(this.max_date).getTime() ){return};
+	if(this.min_date> time || time > this.max_date ){return};
+	
+	
 	var btw = MathUtil.getBetweenSize($("#slider").data("slider").options.min, $("#slider").data("slider").options.max) //전체크기차
 	var point = MathUtil.getBetweenSize($("#slider").data("slider").options.min, time); //특정시간대 포인트
 	var per = MathUtil.getPercentByTot(btw,point);
@@ -66,6 +54,7 @@ MapLog.prototype.setTime	= function(time){
 	var lng = atData.latlng.split(",")[1];
 	var map = getMap();
 	var markerop = {icon:"http://mt.google.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-a.png"};
+	
 	if(this.point && this.point['dataIndex'] == index){
 		return;
 	}
@@ -77,9 +66,12 @@ MapLog.prototype.setTime	= function(time){
 	this.point['dataIndex']= index;
 	return GmapUtil.createLatLng(Number(lat),Number(lng));
 }
+MapLog.prototype.init	= function(){
+}
 MapLog.prototype.finalize	= function(){
-	Log.prototype.finalize.call(this);
 	try{
+		$("#container-"+this.id).remove();
+		$("#log-list-item-"+this.id).remove();
 		if(this.point)
 			GmapUtil.removeMarker(getMap(),this.point);
 		this.polyline.setMap(null);
@@ -87,19 +79,48 @@ MapLog.prototype.finalize	= function(){
 };
 
 
-
 function DataLog(){};
-DataLog.prototype = new Log(); //상속
+DataLog.prototype = new Object();
+DataLog.prototype.id;
+DataLog.prototype.open="N"; //공개 비공개  기본 비공개
 DataLog.prototype.type		= 'data';
 DataLog.prototype.chartType	= 'linefill',
+DataLog.prototype.isSearch; // 서치대상인가 아닌가. 서치버튼누를때마다 false 되고 완료되면 트루된다.
+DataLog.prototype.min_date;//14554165155 초기 
+DataLog.prototype.max_date;//14554165155 초기
+DataLog.prototype.title;//:$('#data-form-title').val(),
+DataLog.prototype.data;//:eval($('#data-form-data').val()),
+DataLog.prototype.chartData	= function(){return this.data;};
+DataLog.prototype.save		= function(){return save(this.id);};
+DataLog.prototype.remove	= function(){return remove(this.id);};
 DataLog.prototype.edit		= function(){return loadDataForm(this.id);};
+DataLog.prototype.add		= function(){return addLog(this.id);};
+DataLog.prototype.insertData	= function(){return JavaScriptUtil.arrayToString(this.data);};
+DataLog.prototype.selectData	= function(getData){this.data=getData;};
+DataLog.prototype.setTime	= function(time){
+	
+}
+DataLog.prototype.finalize 	= function(){
+	try{
+		$("#container-"+this.id).remove();
+		$("#log-list-item-"+this.id).remove();
+	}catch(e){}
+}
+
+
 
 
 function PhotoLog(){};
-PhotoLog.prototype = new Log(); //상속
+PhotoLog.prototype = new Object();
+PhotoLog.prototype.id;
+PhotoLog.prototype.open="N"; //공개 비공개  기본 비공개
 PhotoLog.prototype.type				= 'photo';
 PhotoLog.prototype.chartType		= 'dot';
+PhotoLog.prototype.isSearch; // 서치대상인가 아닌가. 서치버튼누를때마다 false 되고 완료되면 트루된다.
+PhotoLog.prototype.min_date;//14554165155 초기 
+PhotoLog.prototype.max_date;//14554165155 초기
 PhotoLog.prototype.chartAxisYCount	= 0;
+PhotoLog.prototype.title;//:$('#photo-form-title').val(),
 PhotoLog.prototype.toggle = function(){
 			this.markers['visible']=!this.markers['visible'];
 			if(this.markers['visible']){
@@ -110,16 +131,23 @@ PhotoLog.prototype.toggle = function(){
 					this.markers[i].setMap(null);
 			}
 		};
+PhotoLog.prototype.save = function(){return save(this.id);};
+PhotoLog.prototype.remove = function(){
+			remove(this.id);
+		};
+PhotoLog.prototype.data;
 PhotoLog.prototype.chartData = function(){return chartPhotoData(this.id);};
 PhotoLog.prototype.edit = function(){ return	loadPhotoForm(this.id);};
 PhotoLog.prototype.add =  function(){
-	var a = Log.prototype.add.call(this); 
+	var a = addLog(this.id); 
 	for(var i=0;i<this.markers.length;i++)
 		this.markers[i].setMap(getMap());
 	return a;
 };
+PhotoLog.prototype.insertData	= function(){return JavaScriptUtil.arrayToString(this.data);};
+PhotoLog.prototype.selectData	= function(getData){this.data=getData;};
 PhotoLog.prototype.setTime	= function(time){
-	if(transDate(this.min_date).getTime()> time || time > transDate(this.max_date).getTime() ){return};	
+	if(this.min_date> time || time > this.max_date ){return};	
 	var btw = MathUtil.getBetweenSize($("#slider").data("slider").options.min, $("#slider").data("slider").options.max) //전체크기차
 	var point = MathUtil.getBetweenSize($("#slider").data("slider").options.min, time); //특정시간대 포인트
 	var per = MathUtil.getPercentByTot(btw,point);
@@ -149,8 +177,9 @@ PhotoLog.prototype.setTime	= function(time){
 	return GmapUtil.createLatLng(Number(lat),Number(lng));
 }
 PhotoLog.prototype.finalize = function(){
-	Log.prototype.finalize.call(this);
 	try{
+		$("#container-"+this.id).remove();
+		$("#log-list-item-"+this.id).remove();
 		if(this.point)
 			GmapUtil.removeMarker(getMap(),this.point);
 		for(var i=0;i<this.markers.length;i++)
@@ -158,11 +187,18 @@ PhotoLog.prototype.finalize = function(){
 	}catch(e){}
 }
 
+
 function MsgLog(){};
-MsgLog.prototype = new Log(); //상속
+MsgLog.prototype = new Object();
+MsgLog.prototype.id;
+MsgLog.prototype.open="N"; //공개 비공개  기본 비공개
 MsgLog.prototype.type			= 'msg';
+MsgLog.prototype.isSearch; // 서치대상인가 아닌가. 서치버튼누를때마다 false 되고 완료되면 트루된다.
+MsgLog.prototype.min_date;//14554165155 초기 
+MsgLog.prototype.max_date;//14554165155 초기
 MsgLog.prototype.chartType		= 'dot';
 MsgLog.prototype.chartAxisYCount= 0;
+MsgLog.prototype.title;//:$('#msg-form-title').val(),
 MsgLog.prototype.toggle = function(){
 			this.markers['visible']=!this.markers['visible'];
 			if(this.markers['visible']){
@@ -173,16 +209,23 @@ MsgLog.prototype.toggle = function(){
 					this.markers[i].setMap(null);
 			}
 		};
+MsgLog.prototype.save = function(){return save(this.id);};
+MsgLog.prototype.remove = function(){
+			remove(this.id);
+		},
+MsgLog.prototype.data;
 MsgLog.prototype.chartData = function(){return chartMsgData(this.id);};
 MsgLog.prototype.edit=function(){ return	loadMsgForm(this.id);};
 MsgLog.prototype.add=function(){
-	var a = Log.prototype.add.call(this); 
+	var a = addLog(this.id);
 	for(var i=0;i<this.markers.length;i++)
 		this.markers[i].setMap(getMap());
 	return a; 
 };
+MsgLog.prototype.insertData	= function(){return JavaScriptUtil.arrayToString(this.data);};
+MsgLog.prototype.selectData	= function(getData){this.data=getData;};
 MsgLog.prototype.setTime	= function(time){
-	if(transDate(this.min_date).getTime()> time || time > transDate(this.max_date).getTime() ){return};	
+	if(this.min_date> time || time > this.max_date ){return};	
 	//time = time - this.min_date;
 	var btw = MathUtil.getBetweenSize($("#slider").data("slider").options.min, $("#slider").data("slider").options.max) //전체크기차
 	var point = MathUtil.getBetweenSize($("#slider").data("slider").options.min, time); //특정시간대 포인트
@@ -207,12 +250,14 @@ MsgLog.prototype.setTime	= function(time){
 		infowindow.open(map, this.point);
   	});
 	infowindow.open(map, this.point);
+	
 	this.point['dataIndex']= index; 
 // 	return GmapUtil.createLatLng(Number(lat),Number(lng));
 }
 MsgLog.prototype.finalize=function(){
-	Log.prototype.finalize.call(this);
 	try{
+		$("#container-"+this.id).remove();
+		$("#log-list-item-"+this.id).remove();
 		if(this.point)
 			GmapUtil.removeMarker(getMap(),this.point);
 		for(var i=0;this.markers&&i<this.markers.length;i++)
@@ -223,23 +268,69 @@ MsgLog.prototype.finalize=function(){
 
 
 /////live
+
 function LiveGPSLog(){};
-LiveGPSLog.prototype = new MapLog(); //상속
+LiveGPSLog.prototype = new Object();
+LiveGPSLog.prototype.id;
+LiveGPSLog.prototype.open="N"; //공개 비공개  기본 비공개
 LiveGPSLog.prototype.type='liveGPS';
-LiveGPSLog.prototype.sw			= false;	//스위치 온인가 오프인가
+LiveGPSLog.prototype.chartType='linefill';
+LiveGPSLog.prototype.isSearch; // 서치대상인가 아닌가. 서치버튼누를때마다 false 되고 완료되면 트루된다. 
+LiveGPSLog.prototype.min_date;//14554165155 초기 
+LiveGPSLog.prototype.max_date;//14554165155 초기 
+LiveGPSLog.prototype.title; //$('#map-form-title').val(),
+LiveGPSLog.prototype.data;//:eval("["+$('#map-form-data').val()+"]"),
+LiveGPSLog.prototype.toggle=function(){
+	this.polyline['visible']=!this.polyline['visible'];
+	if(this.polyline['visible']){
+		this.polyline.setMap(getMap());
+	}else{
+		this.polyline.setMap(null);
+	}
+};
 LiveGPSLog.prototype.chartData	= function(){return chartMapSpeedData(this.id);};
 LiveGPSLog.prototype.save		= function(){return save(this.id);};
-LiveGPSLog.prototype.edit 		= function(){return loadLiveGPSForm(this.id);};
-LiveGPSLog.prototype.remove		= function(){remove(this.id);};
+LiveGPSLog.prototype.edit 		= function(){return loadMapForm(this.id);};
+LiveGPSLog.prototype.remove	= function(){remove(this.id);};
 LiveGPSLog.prototype.add		= function(){var a = addLog(this.id); this.polyline.setMap(getMap()); return a;};
 LiveGPSLog.prototype.insertData	= function(){return JavaScriptUtil.arrayToString(this.data);};		//DB에 저장히기전에 디코딩 컨버팅 역활한다
 LiveGPSLog.prototype.selectData	= function(getData){this.data=getData;};		// DB에서 가져온뒤 엔코딩 컨버팅 역활을한다.
-
-
-
-
-
-
+LiveGPSLog.prototype.setTime	= function(time){
+	if(this.min_date> time || time > this.max_date ){return};
+	
+	
+	var btw = MathUtil.getBetweenSize($("#slider").data("slider").options.min, $("#slider").data("slider").options.max) //전체크기차
+	var point = MathUtil.getBetweenSize($("#slider").data("slider").options.min, time); //특정시간대 포인트
+	var per = MathUtil.getPercentByTot(btw,point);
+	var index = Math.ceil( MathUtil.getValueByTotInPercent(this.data.length-1,per) );
+	var atData = this.data[index];
+	var lat = atData.latlng.split(",")[0];
+	var lng = atData.latlng.split(",")[1];
+	var map = getMap();
+	var markerop = {icon:"http://mt.google.com/vt/icon?color=ff004C13&name=icons/spotlight/spotlight-waypoint-a.png"};
+	
+	if(this.point && this.point['dataIndex'] == index){
+		return;
+	}
+	GmapUtil.removeMarker(map,this.point);
+	this.point = null;
+	this.point = undefined;
+	this.point = GmapUtil.createMarker(map,Number(lat),Number(lng),markerop);
+	this.point['latlng']=GmapUtil.createLatLng(Number(lat),Number(lng));
+	this.point['dataIndex']= index;
+	return GmapUtil.createLatLng(Number(lat),Number(lng));
+}
+LiveGPSLog.prototype.init	= function(){
+}
+LiveGPSLog.prototype.finalize	= function(){
+	try{
+		$("#container-"+this.id).remove();
+		$("#log-list-item-"+this.id).remove();
+		if(this.point)
+			GmapUtil.removeMarker(getMap(),this.point);
+		this.polyline.setMap(null);
+	}catch(e){}
+};
 
 
 
@@ -301,11 +392,7 @@ EventUtil.addOnloadEventListener(function(){
 	
 	
 	<c:if test="${param.id ne null }">
-	var idarr = "${param.id}".split(",");
-	for (var i = 0; i < idarr.length; i++) {
-		select(idarr[i]);
-	}
-		
+		select("${param.id}");
 	</c:if>
 	
 });
@@ -323,7 +410,7 @@ function init(){
 			}
 			
 	}
-	request(param_user,"loading user infomation request..",false);
+	request(param_user,"loading user infomation request..");
 	
 	var param_logtype = {
 			"url":"/ajax/log",
@@ -347,9 +434,6 @@ function init(){
 						$("#addLog-container").append("<li role='separator' class='divider'></li><li class='dropdown-header'>"+data[i].LOG_GBUN+" <span class='caret'></span></li><li role='separator' class='divider'></li>");
 					}
 					
-					if(isSensor()&& data[i].LOG_GBUN!="SENSOR"){
-						continue;
-					}
 					$("#addLog-container").append(btn);
 					var logTypeE =  $("<optgroup id='log-list-"+data[i].TYPE+"'data-icon='"+data[i].ICON+"' label='"+data[i].TYPE+"'></optgroup>");
 					$("#log-list").append(logTypeE);
@@ -379,7 +463,7 @@ function init(){
 					obj.max_date= Number(data[i].MAX_DATE);
 					log.put(data[i].LOG_ID,obj);
 					
-					var logE = $("#log-list-"+data[i].TYPE).append("<option id='log-list-item-"+data[i].LOG_ID+"' value='"+data[i].LOG_ID+"' data-subtext='("+transDate2(obj.min_date)+"~"+transDate2(obj.max_date)+")'>"+(data[i].TITLE)+"</option>");
+					var logE = $("#log-list-"+data[i].TYPE).append("<option id='log-list-item-"+data[i].LOG_ID+"' value='"+data[i].LOG_ID+"' data-subtext='("+obj.min_date+"~"+obj.max_date+")'>"+(data[i].TITLE)+"</option>");
 // 					var logE = $("#log-list-"+data[i].TYPE).append("<option id='log-list-item-"+data[i].LOG_ID+"' value='"+data[i].LOG_ID+"'>"+(data[i].TITLE)+"</option>");
 					$("#log-list").append(logE);
 				}
@@ -453,20 +537,6 @@ function init(){
 						toastr.success("remove Success!");
 						log.get(id).finalize();
 						log.remove(id);
-						
-						isSensor(function(sensor){
-							var keys = log.getKeys();
-							var seqData = new Array();
-							var transData = new Array(); 
-						 	for (var i = 0; i < keys.length; i++) {
-						 		var atData = log.get(keys[i]);
-						 		if(logmeta.get(atData.type).LOG_GBUN=="SENSOR" && atData['sw']){
-							 		seqData.push(logmeta.get(atData.type).LOG_SEQ);
-							 		transData.push(atData["id"]);
-						 		}
-						 	}
-							sensor.changeSw(seqData.join(","),transData.join(","));
-						});
 					}
 				};
 			request(param,"remove log ...")
@@ -714,7 +784,7 @@ function loadLiveGPSForm(id){
 							var o = log.get(id)||new LiveGPSLog();
 							o.finalize();
 							o.id	= id;
-							o.title = $('#livegps-form-title').val();
+							o.title=$('#livegps-form-title').val();
 							o.data	= eval("[]");
 							o.isSearch=true;
 							log.put(id,o);
@@ -732,7 +802,10 @@ function loadLiveGPSForm(id){
 		///// form load  통신으로 처리하긴 이미지 크기 힘들어요그래서 이렇게.
 		if(log.get(id) && log.get(id)['data']){
 			var pdata = log.get(id);
-			$("#livegps-form-title").val(pdata['title']);
+			$("#msg-form-title").val(pdata['title']);
+			for (var i = 0; i < pdata['data'].length; i++) {
+				addMsg(pdata['data'][i].msg,pdata['data'][i].date,pdata['data'][i].latlng);
+			}
 		}
 	});
 }
@@ -835,6 +908,7 @@ function chartMapSpeedData(id){
 	var before_date = undefined;
 	var before_lat = undefined;
 	var before_lng = undefined;
+	
 	var returnDataObj = new Array();
 	for (var i = 0; i < dataObj.length; i++) {
 		var obj = dataObj[i];
@@ -843,7 +917,6 @@ function chartMapSpeedData(id){
 		var lat = latlng[0];
 		var lng = latlng[1];
 		
-		////if(lat=="37.4129526" && lng =="126.6648771"){continue;}
 		if(before_date){
 			var hms = 60*60*1000; 
 			var bms = before_date.getTime();
@@ -858,30 +931,9 @@ function chartMapSpeedData(id){
 			}else{
 				tt = MathUtil.getValuePercentDown(dist_k,100-per);
 			}
-			
-			if(obj['speed'] && obj['speed']==0){
-				continue;
-			}
 			//speed_data.push({"x":obj['date'], "y":tt});
-			if(!dataObj[i]['auto_speed']){	//speed 비어있는곳이 있으면. 넣어준다.
-				var sp = isNaN(tt)?0:tt.toFixed(2);
-				if(sp==Infinity){
-					continue;
-				}
-				
-// 				if( Math.abs(before_date.getTime() - d.getTime())<1*60*60*1000  ){ //2시간이내에 ..
-// 					if( Math.abs( Number(lat) - Number(before_lat)) > 0.01 ||  Math.abs(Number(lng) - Number(before_lng)) > 0.01 || obj['speed']==0){
-// 					console.log(before_date.getTime()+"-----"+d.getTime()+"  = "+Math.abs(before_date.getTime() - d.getTime()));
-// 					continue;
-// 					}
-// 				}
-// 				if( Math.abs(before_date.getTime() - d.getTime())<30*60*1000 && sp>100 ){ //1분이내일때 100
-// 					console.log("-----");
-// 					continue;
-// 				}
-				dataObj[i]['auto_speed'] = sp;
-// 				dataObj[i]['auto_speed'] = Number.isFinite(sp)?sp:0;
-			}
+			if(!dataObj[i]['speed'])	//speed 비어있는곳이 있으면. 넣어준다.
+				dataObj[i]['speed'] = isNaN(tt)?0:tt.toFixed(2);
 		}
 		//delete dataObj[i]['latlng'];
 		
@@ -936,12 +988,7 @@ function transDate(dataStr){
 
 
 //"20150425121133".substring(0,4) + " " + "20150425121133".substring(4,6) + " " + "20150425121133".substring(6,8) + " " + "20150425121133".substring(8,10)  + " " + "20150425121133".substring(10,12)  + " " + "20150425121133".substring(12,14)
-	var d = new Date(dataStr.substring(0,4), dataStr.substring(4,6)-1, dataStr.substring(6,8), dataStr.substring(8,10), dataStr.substring(10,12), dataStr.substring(12,14), 0);
-	return d;
-}
-function transDate2(dataStr){
-	dataStr = dataStr.toString();
-	var d = dataStr.substring(0,4)+":"+ dataStr.substring(4,6)+":"+ dataStr.substring(6,8)+" "+ dataStr.substring(8,10)+":"+dataStr.substring(10,12)+":"+dataStr.substring(12,14);
+	var d = new Date(dataStr.substring(0,4), dataStr.substring(4,6), dataStr.substring(6,8), dataStr.substring(8,10), dataStr.substring(10,12), dataStr.substring(12,14), 0);
 	return d;
 }
 
@@ -951,7 +998,7 @@ function transTypeChartData(data){
 	for (var i = 0; i < data.length; i++) {
 		var obj = data[i];
 		var datems = transDate(obj['date']).getTime();
-		dateArray.push(obj['date']);
+		dateArray.push(datems);
 		for (var property in obj) { //property
 			if(property=='date'){continue;}
 			if(dataMap.get(property)==undefined){dataMap.put(property,new Array())}
@@ -1004,9 +1051,6 @@ function addLog(id){
 		var body_id = "body-"+id;
 		var footer_id = "footer-"+id;
 		var slider_id = "slider-"+id;
-		
-		var sw_id = "sw-"+id;
-		
 		var h="";
 		h+='<div id="'+container_id+'" class="panel panel-default" style="margin-bottom:10px;">';
 		h+='	<div class="panel-heading" style="padding:3px;">';
@@ -1017,25 +1061,16 @@ function addLog(id){
 		h+='						<span class="input-group-btn" style="padding-left:10px;">';
 		
 		
-		
-		
-		
         <c:if test="${ROLEK.USER_SEQ==param.u}">
-	        if(logmeta.get(data.type).LOG_GBUN=="SENSOR"){
-	        	h+='						<input id="'+sw_id+'" type="checkbox" checked data-toggle="toggle" data-size="small">';
-	        }else{
-		// 		h+='							<button id="'+scope_id+'" class="btn btn-default" style="border-top-left-radius:4px;border-bottom-left-radius:4px;" type="button"><span class="fa fa-arrows-h" aria-hidden="true"></span></span></button>';
-				h+='							<button id="'+save_id+'" class="btn btn-default" type="button"><span class="fa fa-floppy-o" aria-hidden="true"></span></span></button>';
-	        }
-			h+='						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border-top-left-radius:4px;border-bottom-left-radius:4px;"  aria-haspopup="true" aria-expanded="false"><span id="'+open_icon_id+'"class="fa fa-eye'+(data.open=="N"?"-slash":"")+'"></span></button>';
-	        h+='						<ul class="dropdown-menu dropdown-menu-right">';
-			h+='							<li id="'+public_id+'"><a id="map" href="#"><span class="fa fa-eye"></span> public</a></li>';
-			h+='							<li id="'+private_id+'"><a id="map" href="#"><span class="fa fa-eye-slash "></span> private</a></li>';
-	        h+='						</ul>';
-			h+='						<button id="'+edit_id+'" class="btn btn-default" style="border-top-right-radius:4px;border-bottom-right-radius:4px;" type="button"><span class="fa fa-pencil-square-o" aria-hidden="true"></span></span></button>';
-			h+='						<button id="'+remove_id+'" class="btn btn-default" style="border-top-left-radius:4px;border-bottom-left-radius:4px;" type="button"><span class="fa fa-times" aria-hidden="true"></span></button>';
-	        
-	        
+		h+='						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" style="border-top-left-radius:4px;border-bottom-left-radius:4px;"  aria-haspopup="true" aria-expanded="false"><span id="'+open_icon_id+'"class="fa fa-eye'+(data.open=="N"?"-slash":"")+'"></span></button>';
+        h+='						<ul class="dropdown-menu dropdown-menu-right">';
+		h+='							<li id="'+public_id+'"><a id="map" href="#"><span class="fa fa-eye"></span> public</a></li>';
+		h+='							<li id="'+private_id+'"><a id="map" href="#"><span class="fa fa-eye-slash "></span> private</a></li>';
+        h+='						</ul>';
+// 		h+='							<button id="'+scope_id+'" class="btn btn-default" style="border-top-left-radius:4px;border-bottom-left-radius:4px;" type="button"><span class="fa fa-arrows-h" aria-hidden="true"></span></span></button>';
+		h+='							<button id="'+save_id+'" class="btn btn-default" type="button"><span class="fa fa-floppy-o" aria-hidden="true"></span></span></button>';
+		h+='							<button id="'+edit_id+'" class="btn btn-default" style="border-top-right-radius:4px;border-bottom-right-radius:4px;" type="button"><span class="fa fa-pencil-square-o" aria-hidden="true"></span></span></button>';
+		h+='							<button id="'+remove_id+'" class="btn btn-default" style="border-top-left-radius:4px;border-bottom-left-radius:4px;" type="button"><span class="fa fa-times" aria-hidden="true"></span></button>';
 		</c:if>
 		h+='							<button id="'+toggle_id+'" class="btn btn-default"  type="button"><span class="fa fa-bars" aria-hidden="true"></span></span></button>';
 		h+='						</span>';
@@ -1052,41 +1087,7 @@ function addLog(id){
 		
 		var newLog=$(h);	
 		
-		var toggle = newLog.find('#'+sw_id).bootstrapToggle();
-		if(data.sw){
-			toggle.bootstrapToggle('on');
-		}else{
-			toggle.bootstrapToggle('off');
-		}
-		isSensor(function(){
-			toggle.bootstrapToggle('enable');
-		}, function(){
-			toggle.bootstrapToggle('disable');
-		});
 		
-		
-		newLog.find("#"+sw_id).change(function() {
-			log.get(id)['sw'] = $(this).prop('checked');
-			
-			isSensor(function(sensor){
-				
-				var keys = log.getKeys();
-				
-				var seqData = new Array();
-				var transData = new Array(); 
-			 	for (var i = 0; i < keys.length; i++) {
-			 		var atData = log.get(keys[i]);
-			 		if(logmeta.get(atData.type).LOG_GBUN=="SENSOR" && atData['sw']){
-				 		seqData.push(logmeta.get(atData.type).LOG_SEQ);
-				 		transData.push(atData["id"]);
-			 		}
-			 	}
-				sensor.changeSw(seqData.join(","),transData.join(","));
-			});
-			
-	    })
-	    
-	    
 		newLog.find("#"+public_id).click(function(){
 			data['open'] = "Y";
 			saveTitle(id);
@@ -1156,8 +1157,8 @@ function addLog(id){
 	 	var graphArry = new Array();
 		var chart_data 	= new Array();
 		var dataMap 	= transTypeChartData(dataObj);
-		data['min_date'] = dataMap['min_date']||"0";
-		data['max_date'] = dataMap['max_date']||"0";
+		data['min_date'] = dataMap['min_date']||0;
+		data['max_date'] = dataMap['max_date']||0;
 		
 	 	var keys = dataMap.getKeys();
 		for (var i = 0; i < keys.length; i++) {
@@ -1188,9 +1189,8 @@ function addLog(id){
 			graph.chartAxisYCount = data.chartAxisYCount==undefined?4:data.chartAxisYCount;
 			graph.chartAxisXFnc = function(data,index){
 				var date = new Date(Number(data));
-				return DateUtil.getDate("yy:MM:dd HH:mm",date); 
 // 				return DateUtil.getDate("yyyy:MM:dd HH:mm:ss",date); 
-// 				return DateUtil.getDate("HH:mm:ss",date); 
+				return DateUtil.getDate("HH:mm:ss",date); 
 			}
 				
 			//dataset
@@ -1220,8 +1220,8 @@ function addLog(id){
 				var at = log.get(id);
 				///////slider
 				 var option = {
-				    		"min":transDate(at['min_date']).getTime(),
-				    		"max":transDate(at['max_date']).getTime(),
+				    		"min":at['min_date'],
+				    		"max":at['max_date'],
 				    		"value":0,
 				    		"tooltip":"always",
 				    		formatter: function(value) {
@@ -1251,9 +1251,9 @@ function addLog(id){
 		
 		//////slider
 		 var option = {
-		    		"min":transDate(data['min_date']).getTime(),
-		    		"max":transDate(data['max_date']).getTime(),
-		    		"value":[transDate(data['min_date']).getTime(),transDate(data['max_date']).getTime()],
+		    		"min":data['min_date'],
+		    		"max":data['max_date'],
+		    		"value":[data['min_date'],data['max_date']],
 		    		"tooltip":"hide",
 // 		    		"tooltip":"always",
 		    		formatter: function(value) {
@@ -1278,11 +1278,11 @@ function addLog(id){
 		
 		$("#log-container").append(newLog);
 		
+		
 		var keys = log.getKeys();
 		for(var i=0 ; i < keys.length ; i ++){
 			$("#log-list-item-"+log.get(keys[i]).id).remove();
-			var logE = $("#log-list-"+log.get(keys[i]).type).append("<option id='log-list-item-"+log.get(keys[i]).id+"' value='"+log.get(keys[i]).id+"' data-subtext='("+transDate2(log.get(keys[i]).min_date)+"~"+transDate2(log.get(keys[i]).max_date)+")'>"+log.get(keys[i]).title+"</option>");
-// 			var logE = $("#log-list-"+log.get(keys[i]).type).append("<option id='log-list-item-"+log.get(keys[i]).id+"' value='"+log.get(keys[i]).id+"' data-subtext='("+DateUtil.getDate('yyyy:MM:dd HH:mm:ss',log.get(keys[i]).min_date)+"~"+DateUtil.getDate('yyyy:MM:dd HH:mm:ss',log.get(keys[i]).max_date)+")'>"+log.get(keys[i]).title+"</option>");
+			var logE = $("#log-list-"+log.get(keys[i]).type).append("<option id='log-list-item-"+log.get(keys[i]).id+"' value='"+log.get(keys[i]).id+"' data-subtext='("+DateUtil.getDate('yyyy:MM:dd HH:mm:ss',log.get(keys[i]).min_date)+"~"+DateUtil.getDate('yyyy:MM:dd HH:mm:ss',log.get(keys[i]).max_date)+")'>"+log.get(keys[i]).title+"</option>");
 // 			var logE = $("#log-list-"+log.get(keys[i]).type).append("<option id='log-list-item-"+log.get(keys[i]).id+"' value='"+log.get(keys[i]).id+"'>"+log.get(keys[i]).title+"</option>");
 			$("#log-list").append(logE);
 		}
@@ -1357,7 +1357,7 @@ function getMap(){
         <div class="col-md-4 col-centered">
         </div>
         
-        <div class="col-md-4 col-centered" style="margin-top:5px;">
+        <div class="col-md-4 col-centered" >
         	<div class="item" style="width: 100%">
         		<div class="content">
 			          <img class="img-circle" src="/user/profile.png?u=${param.u}" width="100" height="100"/>

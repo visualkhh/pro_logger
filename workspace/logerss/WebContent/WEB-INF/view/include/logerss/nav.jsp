@@ -68,8 +68,10 @@
 	                <li><a href="/view/profile"><span class="fa fa-user"></span> Edit profile</a></li>
               	</ul>
 	          </li>
+	          <button  class="btn btn-default" onclick="location.reload();"><span class="fa fa-refresh"" aria-hidden="true"></span></button>
 	          </rolek:insertString>
           </span>
+	         
 <%--           <a class="navbar-brand" href="/view" style="color:rgb(255,162,6);"><img src="<fluid:insertString id="icon"/>" style="float: left;"/>logerss</a> --%>
           
 

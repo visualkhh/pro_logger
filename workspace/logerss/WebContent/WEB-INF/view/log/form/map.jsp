@@ -11,6 +11,6 @@
 	</h3>
 	</div>
 	<div class="panel-body" style="padding:0px;">
-           <textarea class="form-control" rows="10" id="map-form-data" placeholder='[{date:"yyyyMMddHHmmss", latlng:"latitude, longitude"}, {date:"yyyyMMddHHmmss", latlng:"latitude, longitude"}..]'>${param.data}</textarea>
+           <textarea class="form-control"  rows="10" id="map-form-data" placeholder='[{date:"yyyyMMddHHmmss", latlng:"latitude, longitude"}, {date:"yyyyMMddHHmmss", latlng:"latitude, longitude"}..]'></textarea>
 	</div>
 </div>
