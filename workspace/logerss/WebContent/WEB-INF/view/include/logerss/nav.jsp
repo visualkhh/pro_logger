@@ -30,7 +30,13 @@
 		var status_msg = $(data).find("ROOT>STATUS_MSG").text();
 		if(STATUS_CODE_SUCCESS==status_code){ //성공
 			alert("Sign out success");
-			setTimeout(LocationUtil.goHref("/view"), "1500")
+			isSensor(function(sensor){
+				sensor.logout();
+				setTimeout(LocationUtil.goHref("/view/signin"), "1500")
+			},function(){
+				setTimeout(LocationUtil.goHref("/view"), "1500")	
+			});
+			
 		}else{	//실패
 			alert(status_msg+"("+status_code+")");
 		}

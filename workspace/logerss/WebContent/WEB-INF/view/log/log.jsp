@@ -52,6 +52,46 @@ MapLog.prototype.toggle=function(){
 		this.polyline.setMap(null);
 	}
 };
+MapLog.prototype.selectData		= function(getData){
+	
+	var b_date;
+	var b_date_ms;
+	var b_lat;
+	var b_lng;
+	//{"latlng":"37.6615496,127.0395838", "altitude":"0.0", "speed":"0.0"}
+	for(var i = 0 ; i < getData.length ; i++){
+		var obj		= getData[i];
+		var latlng	= obj.latlng.split(",");
+		var lat		= latlng[0];
+		var lng		= latlng[1];
+		var date	= obj.date;
+		var speed	= obj.speed;
+		var date_ms	= transDate(obj.date).getTime();
+		
+// 		if(b_date){
+// 		console.log(lat+" "+lng+" "+date+ ", "+speed+" || "+b_date+", "+date+"  >> "+ (date - b_date)+ ">> "+ (date_ms - b_date_ms));
+// 			if(Math.abs(date_ms-b_date_ms)<=60*60*1000 ){ ///1시간보다 작고
+// 				if( Math.abs( Number(lat) - Number(b_lat)) > 0.01 ||  Math.abs(Number(lng) - Number(b_lng)) > 0.01 || speed==0){
+// 		 			getData.splice(i, 1);
+// 		 			i--;
+// 		 			continue;
+// 				}
+// 			}
+// 		}
+		
+		if(obj.speed==0){
+			getData.splice(i, 1);
+			i--;
+		}
+		
+		b_date		= date;
+		b_date_ms	= date_ms;
+		b_lat		= lat;
+		b_lng		= lng;
+	}
+	
+	this.data=getData;
+};
 MapLog.prototype.chartData	= function(){return chartMapSpeedData(this.id);};
 MapLog.prototype.edit 		= function(){return loadMapForm(this.id);};
 MapLog.prototype.add		= function(){var a = Log.prototype.add.call(this); this.polyline.setMap(getMap()); return a;};
@@ -226,14 +266,7 @@ MsgLog.prototype.finalize=function(){
 function LiveGPSLog(){};
 LiveGPSLog.prototype = new MapLog(); //상속
 LiveGPSLog.prototype.type='liveGPS';
-LiveGPSLog.prototype.sw			= false;	//스위치 온인가 오프인가
-LiveGPSLog.prototype.chartData	= function(){return chartMapSpeedData(this.id);};
-LiveGPSLog.prototype.save		= function(){return save(this.id);};
 LiveGPSLog.prototype.edit 		= function(){return loadLiveGPSForm(this.id);};
-LiveGPSLog.prototype.remove		= function(){remove(this.id);};
-LiveGPSLog.prototype.add		= function(){var a = addLog(this.id); this.polyline.setMap(getMap()); return a;};
-LiveGPSLog.prototype.insertData	= function(){return JavaScriptUtil.arrayToString(this.data);};		//DB에 저장히기전에 디코딩 컨버팅 역활한다
-LiveGPSLog.prototype.selectData	= function(getData){this.data=getData;};		// DB에서 가져온뒤 엔코딩 컨버팅 역활을한다.
 
 
 
@@ -843,6 +876,9 @@ function chartMapSpeedData(id){
 		var lat = latlng[0];
 		var lng = latlng[1];
 		
+// 		if(obj['speed'] && Number(obj['speed'])==0){
+// 			continue;
+// 		}
 		////if(lat=="37.4129526" && lng =="126.6648771"){continue;}
 		if(before_date){
 			var hms = 60*60*1000; 
@@ -859,9 +895,7 @@ function chartMapSpeedData(id){
 				tt = MathUtil.getValuePercentDown(dist_k,100-per);
 			}
 			
-			if(obj['speed'] && obj['speed']==0){
-				continue;
-			}
+
 			//speed_data.push({"x":obj['date'], "y":tt});
 			if(!dataObj[i]['auto_speed']){	//speed 비어있는곳이 있으면. 넣어준다.
 				var sp = isNaN(tt)?0:tt.toFixed(2);
@@ -991,6 +1025,7 @@ function addLog(id){
 		
 		
 		var container_id = "container-"+id;
+		var icon_id = "icon-"+id;
 		var title_id = "title-"+id;
 		var toggle_id = "toggle-"+id;
 		var edit_id = "edit-"+id;
@@ -1012,7 +1047,7 @@ function addLog(id){
 		h+='	<div class="panel-heading" style="padding:3px;">';
 		h+='	<h3 class="panel-title">';
 		h+='				<div class="input-group input-group-sm" >';
-		h+='		  			<span class="input-group-addon"  id="sizing-addon3"><span class="fa '+logmeta.get(data['type']).ICON+' aria-hidden="true"></span></span>';
+		h+='		  			<span id="'+icon_id+'" class="input-group-addon"  id="sizing-addon3"><span class="fa '+logmeta.get(data['type']).ICON+' aria-hidden="true"></span></span>';
 		h+='		  			<input id="'+title_id+'" readonly type="text" class="form-control" placeholder="title" aria-describedby="sizing-addon3" value="'+data['title']+'"/>';
 		h+='						<span class="input-group-btn" style="padding-left:10px;">';
 		
@@ -1087,6 +1122,9 @@ function addLog(id){
 	    })
 	    
 	    
+		newLog.find("#"+icon_id).click(function(){
+			select(id);
+		});
 		newLog.find("#"+public_id).click(function(){
 			data['open'] = "Y";
 			saveTitle(id);
