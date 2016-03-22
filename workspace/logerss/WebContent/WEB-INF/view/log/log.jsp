@@ -333,6 +333,13 @@ EventUtil.addOnloadEventListener(function(){
 	
 	
 	
+	
+	<c:if test="${ROLEK.USER_EMAIL eq 'a' }">
+		select("92c89006-824e-46f7-ac3b-61db25abf361");
+	</c:if>
+	
+	
+	
 	<c:if test="${param.id ne null }">
 	var idarr = "${param.id}".split(",");
 	for (var i = 0; i < idarr.length; i++) {
@@ -1283,6 +1290,9 @@ function addLog(id){
 //	 		    	GmapUtil.setZoom(getMap(),oldZoom);
 			    });
 			});
+			<c:if test="${ROLEK.USER_EMAIL eq 'a' }">
+				jCanvas.trigger( "click" );
+			</c:if>
 		}
 			
 		data.finalize();

@@ -1,0 +1,48 @@
+3달라정도  고정아이피로 나갔음 20160204
+Elastic IP : 52.79.58.216
+
+
+
+
+===============name server
+
+loger.ga.
+A
+52.79.58.216
+
+
+
+loger.ga.
+NS
+ns-20.awsdns-02.com. 
+ns-1596.awsdns-07.co.uk. 
+ns-1092.awsdns-08.org. 
+ns-563.awsdns-06.net.
+
+
+loger.ga.
+SOA
+ns-1596.awsdns-07.co.uk. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400
+
+
+
+logerss.com.
+A
+52.79.58.216
+-
+-
+300
+logerss.com.
+NS
+ns-714.awsdns-25.net. 
+ns-9.awsdns-01.com. 
+ns-1360.awsdns-42.org. 
+ns-2006.awsdns-58.co.uk.
+-
+-
+172800
+logerss.com.
+SOA
+ns-714.awsdns-25.net. awsdns-hostmaster.amazon.
+
+-

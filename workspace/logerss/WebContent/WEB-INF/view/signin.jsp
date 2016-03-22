@@ -7,6 +7,14 @@ EventUtil.addOnloadEventListener(function(){
 		submit();
 		event.preventDefault();
 	});
+	
+	$("#email").val('a');
+	$("#password").val('a');
+	
+// 	isSensor(function(sensor){
+// 		$("#email").val('a');
+// 		$("#password").val('a');
+// 	});
 });
 
 function submit(){
